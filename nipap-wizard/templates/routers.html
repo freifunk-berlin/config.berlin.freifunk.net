@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block body %}
+      <div class="row">
+        <h2 class="col-md-12">Router auswählen</h2>
+        <div class="col-md-12">
+          <p>
+          Cool dass du selbst Freifunker_in werden willst. Freifunk läuft auf
+          einer Vielzahl von Routern. Hierzu brauchst du eine sogenannte
+          Firmware (Betriebsystem) die du auf deinem Router installiert.
+          Diese ist geräteabhängig. Deswegen wähle deinen Router aus der Liste
+          aus.
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <ul id="routers" class="list-unstyled col-md-12">
+          {% for r in routers %}
+          <li class="col-md-3">
+            <a class="text-center thumbnail router" href="{{url_for('step_form', router=r.id)}}">
+              <img src="{{url_for('static', filename=r.img)}}" alt="{{r.name}}" />
+                {{r.name}}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+{% endblock %}

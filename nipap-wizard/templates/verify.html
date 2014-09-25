@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block body %}
+      <div class="row">
+        <h2 class="col-md-12">Verifizierung</h2>
+        <div class="col-md-12">
+          <div class="row">
+            <p class="col-md-12">
+              Ein Antrag ist erfolgreich eingegangen. An die von dir angegebene
+              Email-Adresse wurde eine Email zur Verifizierung / Aktivierung
+              geschickt. Bitte schau in dein Posteingang und
+              klick auf den angegeben Link!
+            </p>
+          </div>
+
+          <div class="row">
+            <p class="col-md-12 text-center">
+            <img src="{{url_for('static', filename='img/participate_small.png')}}" id="participate" alt="" />
+            </p>
+          </div>
+
+          <div class="row">
+            <p class="col-md-12">
+              Es kann unter Umständen bis zu 10 Minuten dauern bis die Email
+              verschickt wird. Wenn du also einen leeren Posteingang vorfindest,
+              versuch es einfach in ein paar Minuten nochmal!
+            </p>
+          </div>
+        </div>
+      </div>
+{% endblock %}
