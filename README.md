@@ -49,10 +49,13 @@ Install nipap-www:
 
 ```
 $ cd nipap
+# add user 'foo' with password 'bar'
 $ python nipap-passwd -c nipap.conf -a foo -p bar -n 'NIPAP web UI' -t
 $ vim nipap.conf                  # set xmlrpc_uri
 $ cp development.ini devel.ini
 $ vim devel.ini                   # set nipap_config_path
+$ python setup.py install
+$ pip install WebOb==1.3.1        # see https://github.com/SpriteLink/NIPAP/issues/624
 $ cd ..
 ```
 
