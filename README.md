@@ -72,11 +72,13 @@ $ paster serve devel.ini
 
 Nipap and nipap-www should run now: http://127.0.0.1:5000
 
-How to install nipap-wizard for development
+How to run nipap-wizard for development
 -------------------------------------------
 
 ```
 $ git clone git@github.com:freifunk-berlin/nipap-wizard.git
 $ cd nipap-wizard
 $ . path/to/you/nipap/environemnt/env/bin/activate
+$ cd nipap-wizard
+$ python app.py
 ```
