@@ -1,0 +1,26 @@
+From cc41033586ebed3db019c25080a932638ec944c5 Mon Sep 17 00:00:00 2001
+From: Nico Geyso <nico.geyso@fu-berlin.de>
+Date: Thu, 25 Sep 2014 12:22:34 +0200
+Subject: [PATCH 2/2] Fix Makefile - tables seems to be in the wrong order
+
+---
+ nipap/sql/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/nipap/sql/Makefile b/nipap/sql/Makefile
+index 03682a8..b828646 100644
+--- a/nipap/sql/Makefile
++++ b/nipap/sql/Makefile
+@@ -55,8 +55,8 @@ db:
+ 
+ 
+ tables:
+-	PGPASSWORD=$(DB_PASS) psql -q -h localhost -U $(DB_USER) -d $(DB_NAME) -f functions.plsql
+ 	PGPASSWORD=$(DB_PASS) psql -q -h localhost -U $(DB_USER) -d $(DB_NAME) -f ip_net.plsql
++	PGPASSWORD=$(DB_PASS) psql -q -h localhost -U $(DB_USER) -d $(DB_NAME) -f functions.plsql
+ 
+ 
+ install: db tables
+-- 
+2.1.0
+
