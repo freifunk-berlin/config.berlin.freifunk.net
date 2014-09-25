@@ -35,6 +35,7 @@ $ cd nipap
 $ python setup install
 $ cp nipap.conf.dist nipap.conf
 $ vim nipap.conf
+$ python nipap-passwd -c nipap.conf --create-database
 $ cd ..
 ```
 
@@ -70,3 +71,12 @@ $ paster serve devel.ini
 ```
 
 Nipap and nipap-www should run now: http://127.0.0.1:5000
+
+How to install nipap-wizard for development
+-------------------------------------------
+
+```
+$ git clone git@github.com:freifunk-berlin/nipap-wizard.git
+$ cd nipap-wizard
+$ . path/to/you/nipap/environemnt/env/bin/activate
+```
