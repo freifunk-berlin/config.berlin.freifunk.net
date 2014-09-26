@@ -1,0 +1,16 @@
+Hey,
+
+du (oder jmd anders) hat IP-Adressen für den Router '{{router}}' beantragt. Dir
+wurden folgende Adressen zu gewiesen:
+
+{% for ip in ips %}* {{ip}}
+{% endfor %}
+
+Um die Adressen benutzen zu können musst du sie zuerst noch aktivieren. Klicke
+dazu bitte auf folgenden Link:
+
+  {{url}}
+
+Grüße
+Freifunk Berlin
+

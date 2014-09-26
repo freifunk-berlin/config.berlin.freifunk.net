@@ -77,10 +77,10 @@ class Api:
     def list_all_prefixes(self):
         return pynipap.Prefix.list()
 
-    def _create_prefix(self, pool, prefix_len = None, data = {}):
+    def _create_prefix(self, pool,prefix_len = None, prefix_type = 'assignment', data = {}):
         prefix = pynipap.Prefix()
         prefix.vrf = self.vrf
-        prefix.type = 'assignment'
+        prefix.type = prefix_type
         for k,v in data.items():
             setattr(prefix, k, v)
 
@@ -89,6 +89,8 @@ class Api:
             args['prefix_length'] = prefix_len
 
         prefix.save(args)
+
+        return prefix
 
     def create_prefix_from_pool(self, pool_name, prefix_len = None, data = {}):
         """Creates a prefix from a given pool. You can specify prefix_len if
@@ -102,4 +104,6 @@ class Api:
         if pool is None:
             raise Exception("Pool '%s' does not exist" % pool_name)
 
-        self._create_prefix(pool, prefix_len, data)
+        prefix = self._create_prefix(pool, prefix_len, data=data)
+
+        return prefix.prefix
