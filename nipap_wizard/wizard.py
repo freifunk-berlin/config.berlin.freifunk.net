@@ -19,7 +19,7 @@ def wizard_select_router():
     if router_id is not None and router_id in router_db:
         session['router_id'] = router_id
         return redirect(url_for('.wizard_get_email'))
-    return render_template('routers.html', routers=router_db)
+    return render_template('select_router.html', routers=router_db)
 
 @wizard.route('/wizard/email', methods=['GET', 'POST'])
 @session_key_needed('router_id', '.wizard_select_router')
@@ -30,7 +30,7 @@ def wizard_get_email():
         return redirect(url_for('.wizard_send_email'))
     router_db = current_app.config['ROUTER_DB']
     router = router_db[session['router_id']]
-    return render_template('form.html', form = form, router = router)
+    return render_template('email_form.html', form = form, router = router)
 
 @wizard.route('/wizard/confirmation')
 @session_key_needed('router_id', '.wizard_select_router')
@@ -47,7 +47,7 @@ def wizard_send_email():
     for k in ('email', 'router_id'):
         del session[k]
 
-    return render_template('email.html')
+    return render_template('waiting_for_confirmation.html')
 
 
 @wizard.route('/')
