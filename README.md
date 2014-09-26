@@ -36,7 +36,7 @@ Install nipap:
 $ cd nipap
 $ python setup install
 $ cp nipap.conf.dist nipap.conf
-$ vim nipap.conf
+$ vim nipap.conf    # set debug=True, pid_file and db_path (something locally)
 $ python nipap-passwd -c nipap.conf --create-database
 $ cd ..
 ```
