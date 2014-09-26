@@ -10,11 +10,13 @@ frontends:
 How to install nipap for development
 ------------------------------------
 
-Packages needed: postgresql, virtualenv2
+The Mafile in v0.26.4 seems to be broken. There are patches in directory
+`patches` to fix this. You will need `postgresql` and `virtualenv2` as well.
 
 Get source and patch it:
 
 ```
+$ git clone git@github.com:freifunk-berlin/nipap-wizard.git
 $ git clone https://github.com/SpriteLink/NIPAP
 $ cd NIPAP
 $ virtualenv2 env
@@ -23,8 +25,8 @@ $ cd nipap
 $ pip install -r requirements.txt
 $ cd ..
 $ git checkout v0.26.4
-$ patch -p1 < patches/0001-Do-not-install-files-globally-no-root-privileges-nee.patch
-$ patch -p1 < patches/0002-Fix-Makefile-tables-seems-to-be-in-the-wrong-order.patch
+$ patch -p1 < ../nipap-wizard/patches/0001-Do-not-install-files-globally-no-root-privileges-nee.patch
+$ patch -p1 < ../nipap-wizard/patches/0002-Fix-Makefile-tables-seems-to-be-in-the-wrong-order.patch
 $ bash utilities/install-ip4r.sh
 ```
 
@@ -77,6 +79,7 @@ How to run nipap-wizard for development
 
 Install
 
+    $ cd nipap-wizard
     $ pip install -r requirements.txt
     $ python manage.py initdb
 
@@ -87,11 +90,6 @@ Dev Server (including dev smtp server for emails)
     $ python manage.py runserver -p 5001
      * Running on http://127.0.0.1:5001/
      * Restarting with reloader
-
-
-Tests
-
-    $ nosetests
 
 
 For database migrations
