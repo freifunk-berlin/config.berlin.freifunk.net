@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block body %}
+      <div class="row">
+        <h2 class="col-md-12">Fehler aufgetreten!</h2>
+        <div class="col-md-12">
+          <dl class="dl-horizontal">
+            <dt>Code</dt>
+            <dd>{{error.code}}</dd>
+
+            <dt>Beschreibung</dt>
+            <dd>{{error.description}}</dd>
+          </dl>
+
+          <p class="text-center">
+            <a href="{{url_for('index')}}">zur Startseite</a>
+          </p>
+        </div>
+      </div>
+
+{% endblock %}

@@ -69,3 +69,18 @@ a, a:hover {
 .button:hover {
   text-decoration: none;
 }
+
+h1 a {
+  color: #000;
+}
+
+h1 a:hover {
+  text-decoration: none;
+  color: #000;
+}
+
+.form-router img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}

@@ -15,11 +15,11 @@
 
       <div class="row">
         <ul id="routers" class="list-unstyled col-md-12">
-          {% for r in routers %}
+          {% for id, device in routers|dictsort %}
           <li class="col-md-3">
-            <a class="text-center thumbnail router" href="{{url_for('step_form', router=r.id)}}">
-              <img src="{{url_for('static', filename=r.img)}}" alt="{{r.name}}" />
-                {{r.name}}
+            <a class="text-center thumbnail router" href="{{url_for('wizard_select_router', id=id)}}">
+              <img src="{{url_for('static', filename=device.img)}}" alt="{{device.name}}" />
+                {{device.name}}
             </a>
           </li>
           {% endfor %}
