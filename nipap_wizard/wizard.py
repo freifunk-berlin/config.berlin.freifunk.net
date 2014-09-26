@@ -1,16 +1,33 @@
 # -*- coding: utf-8 -*-
 
+from itertools import chain
 from flask import Blueprint, render_template, redirect, url_for, session,\
                   current_app, request, g
-from utils import session_key_needed, send_email, allocate_ips
-from models import db, EmailForm
+from utils import session_key_needed, send_email, allocate_ips, activate_ips
+from models import db, IPRequest, EmailForm
 
 
 wizard = Blueprint('api', __name__)
 
-@wizard.route('/config')
-def wizard_get_config():
-    return render_template('config.html')
+@wizard.route('/config/<token>')
+def wizard_get_config(token):
+    r = IPRequest.query.filter_by(token=token).one()
+    if not r.verified:
+        return redirect(url_for('.index'))
+
+    ips = r.ips.split(' ')
+    ips = {'mesh':[], 'hna':[]}
+    for ip in r.ips.split(' '):
+        if ip.endswith('/32'):
+            ips['mesh'].append(ip.replace('/32', ''))
+        else:
+            ips['hna'].append(ip)
+    router = current_app.config['ROUTER_DB'][r.router_id]
+    firmware = "/".join([current_app.config['FIRMWARE_BASE_URL'],
+                    router['target']
+                ])
+                
+    return render_template('show_config.html', ips=ips, firmware=firmware, router=router)
 
 @wizard.route('/wizard/routers')
 def wizard_select_router():
@@ -52,13 +69,37 @@ def wizard_send_email():
                               num = 1)
     }
 
-    send_email(api_params, session['email'], router, ips)
+    ips = list(chain(*ips.values()))
+    ips_str = " ".join(ips)
+    r = IPRequest(session['email'], ips_str, router_id)
+    db.session.add(r)
+    db.session.commit()
+
+    url = url_for(".wizard_activate", request_id=r.id,
+                  signed_token=r.gen_signed_token(), _external=True)
+    send_email(api_params, session['email'], router, ips, url)
 
     for k in ('email', 'router_id'):
         del session[k]
 
     return render_template('waiting_for_confirmation.html')
 
+@wizard.route('/wizard/activate/<int:request_id>/<signed_token>')
+def wizard_activate(request_id, signed_token):
+    r = IPRequest.query.get(request_id)
+    if not r.verify_signed_token(signed_token, timeout = 3600):
+        raise Exception("Invalid Token")
+
+    activate_ips(current_app.config['APP_ID'], current_app.config['API_USER'],
+            current_app.config['API_PASS'], current_app.config['API_HOST'],
+            r.ips.split(" ")
+    )
+
+    r.verified = True
+    db.session.add(r)
+    db.session.commit()
+
+    return redirect(url_for('.wizard_get_config', token = r.token))
 
 @wizard.route('/')
 def index():

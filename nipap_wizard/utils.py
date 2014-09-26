@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import string
+from random import choice
 from functools import wraps
 from itertools import chain
 from flask import session, redirect, url_for, render_template
@@ -19,6 +21,11 @@ def session_key_needed(key, endpoint):
     return session_key_needed_
 
 
+def gen_random_hash(length):
+    digits = string.ascii_letters + string.digits
+    return ''.join(choice(digits) for x in range(length))
+
+
 def allocate_ips(app_id, api_user, api_pass, api_host, pool, num, prefix_type='reservation'):
     api = Api(app_id)
     api.connect('http://%s:%s@%s' % (api_user, api_pass, api_host))
@@ -26,8 +33,6 @@ def allocate_ips(app_id, api_user, api_pass, api_host, pool, num, prefix_type='r
     ips = []
     for i in range(num):
         ips.append(api.create_prefix_from_pool(pool, prefix_type))
-
-    activate_ips(app_id, api_user, api_pass, api_host, ips)
 
     return ips
 
@@ -38,7 +43,7 @@ def activate_ips(app_id, api_user, api_pass, api_host, ips):
     success = []
     for ip in ips:
         prefix = api.get_prefix_by_prefix(ip)
-        if prefix is not Noone:
+        if prefix is not None:
             prefix.type = 'assignment'
             prefix.save()
             success.append(True)
@@ -48,11 +53,11 @@ def activate_ips(app_id, api_user, api_pass, api_host, ips):
     return success
 
 
-def send_email(api_params, email, router, ips):
+def send_email(api_params, email, router, ips, url):
     body = render_template('email.txt',
         router = router['data']['name'],
-        ips = chain(*ips.values()),
-        url = 'asd',
+        ips = ips,
+        url = url,
         domain = 'ip.berlin.freifunk.net',
     )
 

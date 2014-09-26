@@ -84,3 +84,7 @@ h1 a:hover {
   margin: 0 auto;
   max-width: 100%;
 }
+
+code {
+  color: #000;
+}

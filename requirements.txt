@@ -8,3 +8,4 @@ flask-wtf
 validate_email
 nose
 pynipap
+itsdangerous

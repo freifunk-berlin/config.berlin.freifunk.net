@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from api import Api
+from nipap import Api
 
 api_user = 'foo'
 api_pass = 'bar'
@@ -20,14 +20,14 @@ for p in api.list_all_prefixes():
     print("\t* %s" % p.prefix)
 
 # create prefix from a pool named Mesh
-data = {'customer_id':'foo@bar.de', 'description':'foobar'}
-api.create_prefix_from_pool('Mesh', data = data)
+#data = {'customer_id':'foo@bar.de', 'description':'foobar'}
+api.create_prefix_from_pool('Mesh', 'reservation')
 
 # create prefix with a specific prefix length from a pool named Mesh
-api.create_prefix_from_pool('Mesh', 26)
-
-# Search for free prefixes in a pool:
-print("\nFree prefixes:")
-print("\t* %s" % api.find_free_prefix('Mesh'))
-print("\t* %s" % api.find_free_prefix('Mesh', 26))
+#api.create_prefix_from_pool('Mesh', 26)
+#
+## Search for free prefixes in a pool:
+#print("\nFree prefixes:")
+#print("\t* %s" % api.find_free_prefix('Mesh'))
+#print("\t* %s" % api.find_free_prefix('Mesh', 26))
 

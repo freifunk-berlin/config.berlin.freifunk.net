@@ -6,26 +6,35 @@
           <p>
           Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
           </p>
-          <dl class="dl-horizontal">
-            <dt>Hostname</dt>
-            <dd>Foobar</dd>
+        </div>
+
+        <div class="col-md-12">
+          <dl class="dl-horizontal col-md-8">
+            <dt>Router</dt>
+            <dd>{{router.name}}</dd>
 
             <dt>Firmware</dt>
-            <dd><a href="">Freifunk Berlin Katheen - TP-Link WDR3600</a></dd>
+            <dd><a href="{{firmware}}">Freifunk Berlin</a></dd>
 
             <dt>Mesh-IPs</dt>
-            <dd><code>10.31.99.1</code>, <code>10.31.99.2</code></dd>
+            <dd>
+            {% for ip in ips['mesh'] %}
+            <code>{{ip}}</code> 
+            {% endfor %}
+            </dd>
 
             <dt>DHCP-Network</dt>
-            <dd><code>10.23.1.1/28</code></dd>
+            <dd>
+            {% for ip in ips['hna'] %}
+            <code>{{ip}}</code> 
+            {% endfor %}
+            </dd>
           </dl>
+          <p class="col-md-4 form-router text-center">
+            <img src="{{url_for('static', filename=router.img)}}" alt="{{router.name}}" />
+            {{router.name}}
+          </p>
         </div>
-      </div>
-
-      <div class="row">
-        <p class="col-md-12 text-center">
-        <img src="{{url_for('static', filename='img/mesh.png')}}" id="participate" alt="" />
-        </p>
       </div>
 
       <div class="row">
