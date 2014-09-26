@@ -55,6 +55,7 @@ $ cd nipap
 # add user 'foo' with password 'bar'
 $ python nipap-passwd -c nipap.conf -a foo -p bar -n 'NIPAP web UI' -t
 $ vim nipap.conf                  # set xmlrpc_uri
+$ cd ../nipap-www
 $ cp development.ini devel.ini
 $ vim devel.ini                   # set nipap_config_path
 $ python setup.py install
