@@ -75,10 +75,27 @@ Nipap and nipap-www should run now: http://127.0.0.1:5000
 How to run nipap-wizard for development
 -------------------------------------------
 
-```
-$ git clone git@github.com:freifunk-berlin/nipap-wizard.git
-$ cd nipap-wizard
-$ . path/to/you/nipap/environemnt/env/bin/activate
-$ cd nipap-wizard
-$ python app.py
-```
+Install
+
+    $ pip install -r requirements.txt
+    $ python manage.py initdb
+
+
+Dev Server (including dev smtp server for emails)
+
+    $ python -m smtpd -n -c DebuggingServer localhost:1025
+    $ python manage.py runserver -p 5001
+     * Running on http://127.0.0.1:5001/
+     * Restarting with reloader
+
+
+Tests
+
+    $ nosetests
+
+
+For database migrations
+
+    $ python manage.py db init
+    $ python manage.py db migrate
+    $ python manage.py db upgrade

@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
+
 from functools import wraps
-from flask import session
-from api import Api
+from flask import session, redirect, url_for
+from nipap import Api
 
 def session_key_needed(key, endpoint):
     def session_key_needed_(f):

@@ -29,7 +29,7 @@
             <img src="{{url_for('static', filename=router.img)}}" alt="{{router.name}}" />
             {{router.name}}
           </p>
-          <form class="form-horizontal col-md-8" role="form" action="{{url_for('wizard_get_email')}}" method="post">
+          <form class="form-horizontal col-md-8" role="form" action="{{url_for('.wizard_get_email')}}" method="post">
 
             {{ form.csrf_token }}
             {{ render_bootstrap_field(form.email, "Email") }}
@@ -37,7 +37,7 @@
 
             <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">
-                <a href="{{url_for('wizard_select_router')}}" class="btn
+                <a href="{{url_for('.wizard_select_router')}}" class="btn
                   btn-default">zurück</a>
                 <button type="submit" class="btn btn-default">Anfordern</button>
               </div>

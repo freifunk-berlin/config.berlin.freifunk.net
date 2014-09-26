@@ -1,5 +1,6 @@
-import pynipap
+# -*- coding: utf-8 -*-
 
+import pynipap
 
 class Api:
     """This class wraps pynipap into an useable API for creating prefixes.

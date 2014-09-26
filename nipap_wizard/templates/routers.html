@@ -17,7 +17,7 @@
         <ul id="routers" class="list-unstyled col-md-12">
           {% for id, device in routers|dictsort %}
           <li class="col-md-3">
-            <a class="text-center thumbnail router" href="{{url_for('wizard_select_router', id=id)}}">
+            <a class="text-center thumbnail router" href="{{url_for('.wizard_select_router', id=id)}}">
               <img src="{{url_for('static', filename=device.img)}}" alt="{{device.name}}" />
                 {{device.name}}
             </a>

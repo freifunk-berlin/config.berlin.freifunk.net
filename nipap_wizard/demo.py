@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from api import Api
 
 api_user = 'foo'
