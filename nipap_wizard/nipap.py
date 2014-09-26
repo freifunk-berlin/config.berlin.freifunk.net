@@ -45,23 +45,27 @@ class Api:
         if self.vrf is None:
             raise Exception("VRF '%s' could not be found" % vrf)
 
-    def _get_by_name(self, cls, name):
+    def _get_by(self, cls, val1, val2):
         query = {
             'operator': 'equals',
-            'val1': 'name',
-            'val2': name
+            'val1': val1,
+            'val2': val2
         }
         request = cls.search(query)['result']
 
         return request[0] if len(request) > 0 else None
 
+    def get_prefix_by_prefix(self, prefix):
+        """Searches for a Prefix by prefix."""
+        return self._get_by(pynipap.Prefix, 'prefix', prefix)
+
     def get_pool_by_name(self, name):
         """Searches for a pool by name."""
-        return self._get_by_name(pynipap.Pool, name)
+        return self._get_by(pynipap.Pool, 'name', name)
 
     def get_vrf_by_name(self, name):
         """Searches for a vrf by name."""
-        return self._get_by_name(pynipap.VRF, name)
+        return self._get_by(pynipap.VRF, 'name', name)
 
     def find_free_prefix(self, pool_name, prefix_len = None):
         """Searches for a valid free prefix in a given pool."""
@@ -77,7 +81,7 @@ class Api:
     def list_all_prefixes(self):
         return pynipap.Prefix.list()
 
-    def _create_prefix(self, pool,prefix_len = None, prefix_type = 'assignment', data = {}):
+    def _create_prefix(self, pool, prefix_type, prefix_len = None, data = {}):
         prefix = pynipap.Prefix()
         prefix.vrf = self.vrf
         prefix.type = prefix_type
@@ -92,7 +96,7 @@ class Api:
 
         return prefix
 
-    def create_prefix_from_pool(self, pool_name, prefix_len = None, data = {}):
+    def create_prefix_from_pool(self, pool_name, prefix_type = 'assignment', prefix_len = None, data = {}):
         """Creates a prefix from a given pool. You can specify prefix_len if
            you do not want to us default prefix_len of that pool. Additional
            data can be added with data (as a dict). Only the following
@@ -104,6 +108,6 @@ class Api:
         if pool is None:
             raise Exception("Pool '%s' does not exist" % pool_name)
 
-        prefix = self._create_prefix(pool, prefix_len, data=data)
+        prefix = self._create_prefix(pool, prefix_type, prefix_len, data=data)
 
         return prefix.prefix

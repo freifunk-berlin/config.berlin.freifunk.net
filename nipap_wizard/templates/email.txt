@@ -11,6 +11,9 @@ dazu bitte auf folgenden Link:
 
   {{url}}
 
+Wenn du gar nicht die IP-Adressen beantragt hast oder sie doch nicht willst
+ignoriere diese Mail und die Adressen werden in 48 Stunden wieder freigegeben.
+
 Grüße
 Freifunk Berlin
 

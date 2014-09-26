@@ -10,7 +10,7 @@ class IPRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120))
     nipap_id = db.Column(db.Integer, unique=True)
-    active = db.Column(db.Boolean())
+    verified = db.Column(db.Boolean())
 
     def __init__(self, email):
         self.email = email
