@@ -82,12 +82,12 @@ def wizard_send_email():
 
     # allocate mesh IPs
     ip_mesh_num = 2 if router['data']['dualband'] else 1
-    g.api.allocate_ips(pool = current_app.config['API_POOL_MESH'],
-        request_id = r.id, num = ip_mesh_num)
+    g.api.allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
+        ip_mesh_num)
 
     # allocate HNA network
-    g.api.allocate_ips(pool = current_app.config['API_POOL_HNA'],
-        request_id = r.id, num = 1, prefix_len = session['prefix_len'])
+    g.api.allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
+        prefix_len = session['prefix_len'])
 
     ips = g.api.get_prefixes_by_id(r.id)
     url = url_for(".wizard_activate", request_id=r.id,

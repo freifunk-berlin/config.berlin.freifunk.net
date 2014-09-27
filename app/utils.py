@@ -43,12 +43,17 @@ def send_email(email, router, ips, url):
 
 class NipapApi:
     def __init__(self, app_id, api_user, api_pass, api_host):
+        self.app_id = app_id
         self.api = Api(app_id)
         self.api.connect('http://%s:%s@%s' % (api_user, api_pass, api_host))
 
-    def allocate_ips(self, pool, request_id, num, prefix_len = None, prefix_type='reservation'):
+    def allocate_ips(self, pool, request_id, email, num = 1, prefix_len = None, prefix_type='reservation'):
+        data = {
+            'tags': [self.app_id],
+            'customer_id' : email,
+            'external_key' : request_id
+        }
         ips = []
-        data = {'external_key' : request_id}
         for i in range(num):
             p = self.api.create_prefix_from_pool(pool, prefix_type, prefix_len,
                     data=data)
