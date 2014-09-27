@@ -12,6 +12,7 @@ from models import db, IPRequest, EmailForm
 
 wizard = Blueprint('api', __name__)
 
+
 @wizard.route('/config/<token>')
 def wizard_get_config(token):
     r = IPRequest.query.filter_by(token=token).one()
@@ -32,6 +33,7 @@ def wizard_get_config(token):
                 
     return render_template('show_config.html', ips=ips, firmware=firmware, router=router)
 
+
 @wizard.route('/wizard/routers')
 def wizard_select_router():
     router_db = current_app.config['ROUTER_DB']
@@ -40,6 +42,7 @@ def wizard_select_router():
         session['router_id'] = router_id
         return redirect(url_for('.wizard_get_email'))
     return render_template('select_router.html', routers=router_db)
+
 
 @wizard.route('/wizard/contact', methods=['GET', 'POST'])
 @session_key_needed('router_id', '.wizard_select_router')
@@ -60,6 +63,7 @@ def wizard_get_email():
     router_db = current_app.config['ROUTER_DB']
     router = router_db[session['router_id']]
     return render_template('email_form.html', form = form, router = router)
+
 
 @wizard.route('/wizard/email_sent')
 @session_key_needed('router_id', '.wizard_select_router')
@@ -98,6 +102,7 @@ def wizard_send_email():
 
     return render_template('waiting_for_confirmation.html')
 
+
 @wizard.route('/wizard/activate/<int:request_id>/<signed_token>')
 def wizard_activate(request_id, signed_token):
     r = IPRequest.query.get(request_id)
@@ -115,9 +120,11 @@ def wizard_activate(request_id, signed_token):
 
     return redirect(url_for('.wizard_get_config', token = r.token))
 
+
 @wizard.route('/')
 def index():
     return render_template('welcome.html')
+
 
 @wizard.errorhandler(403)
 @wizard.errorhandler(404)
