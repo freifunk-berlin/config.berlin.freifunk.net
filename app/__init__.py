@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask
+from flask import Flask, render_template
 from .wizard import wizard
 from .exts import db, mail, migrate
 from .wizard import wizard
@@ -11,6 +11,7 @@ def create_app(config=None):
 
     configure_app(app)
     configure_extensions(app)
+    configure_error_handlers(app)
 
     for blueprint in [wizard]:
         app.register_blueprint(blueprint)
@@ -23,6 +24,14 @@ def configure_app(app):
     app.config.from_pyfile('../default.cfg')
     app.config.from_pyfile('../config.cfg', silent=True)
 
+    # http://flask.pocoo.org/docs/0.10/errorhandling/
+    if not app.debug:
+        import logging
+        from logging.handlers import RotatingFileHandler
+        file_handler = RotatingFileHandler(app.config['LOG_FILE_PATH'])
+        file_handler.setLevel(logging.WARNING)
+        app.logger.addHandler(file_handler)
+
 
 def configure_extensions(app):
     # flask-sqlalchemy
@@ -34,3 +43,9 @@ def configure_extensions(app):
     # flask-migrate
     migrate.init_app(app, db)
 
+
+def configure_error_handlers(app):
+    @app.errorhandler(403)
+    @app.errorhandler(404)
+    def errorhandler(e):
+        return render_template('error.html', error=e), e.code

@@ -10,7 +10,7 @@ from utils import session_key_needed, send_email, allocate_ips, activate_ips
 from models import db, IPRequest, EmailForm
 
 
-wizard = Blueprint('api', __name__)
+wizard = Blueprint('wizard', __name__)
 
 
 @wizard.route('/config/<token>')
@@ -124,9 +124,3 @@ def wizard_activate(request_id, signed_token):
 @wizard.route('/')
 def index():
     return render_template('welcome.html')
-
-
-@wizard.errorhandler(403)
-@wizard.errorhandler(404)
-def errorhandler(e):
-    return render_template('error.html', error=e), e.code
