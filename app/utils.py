@@ -26,34 +26,7 @@ def gen_random_hash(length):
     return ''.join(choice(digits) for x in range(length))
 
 
-def allocate_ips(app_id, api_user, api_pass, api_host, pool, num, prefix_len = None, prefix_type='reservation'):
-    api = Api(app_id)
-    api.connect('http://%s:%s@%s' % (api_user, api_pass, api_host))
-
-    ips = []
-    for i in range(num):
-        ips.append(api.create_prefix_from_pool(pool, prefix_type, prefix_len))
-
-    return ips
-
-
-def activate_ips(app_id, api_user, api_pass, api_host, ips):
-    api = Api(app_id)
-    api.connect('http://%s:%s@%s' % (api_user, api_pass, api_host))
-    success = []
-    for ip in ips:
-        prefix = api.get_prefix_by_prefix(ip)
-        if prefix is not None:
-            prefix.type = 'assignment'
-            prefix.save()
-            success.append(True)
-        else:
-            success.append(False)
-
-    return success
-
-
-def send_email(api_params, email, router, ips, url):
+def send_email(email, router, ips, url):
     body = render_template('email.txt',
         router = router['data']['name'],
         ips = ips,
@@ -67,3 +40,27 @@ def send_email(api_params, email, router, ips, url):
               body = body)
     mail.send(msg)
 
+
+class NipapApi:
+    def __init__(self, app_id, api_user, api_pass, api_host):
+        self.api = Api(app_id)
+        self.api.connect('http://%s:%s@%s' % (api_user, api_pass, api_host))
+
+    def allocate_ips(self, pool, request_id, num, prefix_len = None, prefix_type='reservation'):
+        ips = []
+        data = {'external_key' : request_id}
+        for i in range(num):
+            p = self.api.create_prefix_from_pool(pool, prefix_type, prefix_len,
+                    data=data)
+            ips.append(p)
+
+        return ips
+
+    def activate_ips(self, request_id):
+        for p in self.api.get_prefixes_by_key(request_id):
+            p.type = 'assignment'
+            p.save()
+
+    def get_prefixes_by_id(self, prefix_id):
+        prefixes = self.api.get_prefixes_by_key(prefix_id)
+        return [p.prefix for p in prefixes]

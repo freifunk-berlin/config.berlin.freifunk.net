@@ -51,21 +51,27 @@ class Api:
             'val1': val1,
             'val2': val2
         }
-        request = cls.search(query)['result']
+        return cls.search(query)['result']
 
-        return request[0] if len(request) > 0 else None
+    def _get_one_by(self, cls, val1, val2):
+        req = self._get_by(cls, val1, val2)
+        return req[0] if len(req) > 0 else None
 
     def get_prefix_by_prefix(self, prefix):
         """Searches for a Prefix by prefix."""
-        return self._get_by(pynipap.Prefix, 'prefix', prefix)
+        return self._get_one_by(pynipap.Prefix, 'prefix', prefix)
 
     def get_pool_by_name(self, name):
         """Searches for a pool by name."""
-        return self._get_by(pynipap.Pool, 'name', name)
+        return self._get_one_by(pynipap.Pool, 'name', name)
 
     def get_vrf_by_name(self, name):
         """Searches for a vrf by name."""
-        return self._get_by(pynipap.VRF, 'name', name)
+        return self._get_one_by(pynipap.VRF, 'name', name)
+
+    def get_prefixes_by_key(self, external_key):
+        """Searches for prefixes by external_key."""
+        return self._get_by(pynipap.Prefix, 'external_key', '%d' % external_key)
 
     def find_free_prefix(self, pool_name, prefix_len = None):
         """Searches for a valid free prefix in a given pool."""

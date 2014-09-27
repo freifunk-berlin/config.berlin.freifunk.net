@@ -6,12 +6,16 @@ from itertools import chain
 from flask import Blueprint, render_template, redirect, url_for, session,\
                   current_app, request, g
 from wtforms import SelectField
-from utils import session_key_needed, send_email, allocate_ips, activate_ips
+from utils import session_key_needed, send_email, NipapApi
 from models import db, IPRequest, EmailForm
 
 
 wizard = Blueprint('wizard', __name__)
 
+@wizard.before_request
+def init_api():
+    g.api = NipapApi(current_app.config['APP_ID'], current_app.config['API_USER'],
+                current_app.config['API_PASS'], current_app.config['API_HOST'])
 
 @wizard.route('/config/<token>')
 def wizard_get_config(token):
@@ -19,9 +23,8 @@ def wizard_get_config(token):
     if not r.verified:
         return redirect(url_for('.index'))
 
-    ips = r.ips.split(' ')
     ips = {'mesh':[], 'hna':[]}
-    for ip in r.ips.split(' '):
+    for ip in g.api.get_prefixes_by_id(r.id):
         if ip.endswith('/32'):
             ips['mesh'].append(ip.replace('/32', ''))
         else:
@@ -50,7 +53,6 @@ def wizard_get_email():
     choices = []
     prefix_defaults = current_app.config['PREFIX_DEFAULTS']
     for k in prefix_defaults.keys():
-        #choices.append((re.sub('[\W_]+', '', k), k)
         choices.append((k,k))
     setattr(EmailForm, 'location_type', SelectField('Ort', choices=choices))
 
@@ -73,29 +75,24 @@ def wizard_send_email():
     router_db = current_app.config['ROUTER_DB']
     router_id = session['router_id']
     router = {'id': router_id, 'data': router_db[router_id]}
-
-    api_params = (current_app.config['APP_ID'], current_app.config['API_USER'],
-            current_app.config['API_PASS'], current_app.config['API_HOST'])
-    ip_mesh_num = 2 if router['data']['dualband'] else 1
-    ips = {
-        'mesh' : allocate_ips(*api_params,
-                              pool = current_app.config['API_POOL_MESH'],
-                              num = ip_mesh_num),
-        'hna' : allocate_ips(*api_params,
-                              pool = current_app.config['API_POOL_HNA'],
-                              num = 1,
-                              prefix_len = session['prefix_len'])
-    }
-
-    ips = list(chain(*ips.values()))
-    ips_str = " ".join(ips)
-    r = IPRequest(session['email'], ips_str, router_id)
+    r = IPRequest(session['email'], router_id)
     db.session.add(r)
     db.session.commit()
 
+
+    # allocate mesh IPs
+    ip_mesh_num = 2 if router['data']['dualband'] else 1
+    g.api.allocate_ips(pool = current_app.config['API_POOL_MESH'],
+        request_id = r.id, num = ip_mesh_num)
+
+    # allocate HNA network
+    g.api.allocate_ips(pool = current_app.config['API_POOL_HNA'],
+        request_id = r.id, num = 1, prefix_len = session['prefix_len'])
+
+    ips = g.api.get_prefixes_by_id(r.id)
     url = url_for(".wizard_activate", request_id=r.id,
-                  signed_token=r.gen_signed_token(), _external=True)
-    send_email(api_params, session['email'], router, ips, url)
+                  signed_token=r.gen_signed_token(ips), _external=True)
+    send_email(session['email'], router, ips, url)
 
     for k in ('email', 'router_id'):
         del session[k]
@@ -106,15 +103,13 @@ def wizard_send_email():
 @wizard.route('/wizard/activate/<int:request_id>/<signed_token>')
 def wizard_activate(request_id, signed_token):
     r = IPRequest.query.get(request_id)
-    if not r.verify_signed_token(signed_token, timeout = 3600):
+    ips = g.api.get_prefixes_by_id(r.id)
+    if not r.verify_signed_token(ips, signed_token, timeout = 3600):
         raise Exception("Invalid Token")
 
-    activate_ips(current_app.config['APP_ID'], current_app.config['API_USER'],
-            current_app.config['API_PASS'], current_app.config['API_HOST'],
-            r.ips.split(" ")
-    )
-
+    g.api.activate_ips(r.id)
     r.verified = True
+
     db.session.add(r)
     db.session.commit()
 
