@@ -26,13 +26,13 @@ def gen_random_hash(length):
     return ''.join(choice(digits) for x in range(length))
 
 
-def allocate_ips(app_id, api_user, api_pass, api_host, pool, num, prefix_type='reservation'):
+def allocate_ips(app_id, api_user, api_pass, api_host, pool, num, prefix_len = None, prefix_type='reservation'):
     api = Api(app_id)
     api.connect('http://%s:%s@%s' % (api_user, api_pass, api_host))
 
     ips = []
     for i in range(num):
-        ips.append(api.create_prefix_from_pool(pool, prefix_type))
+        ips.append(api.create_prefix_from_pool(pool, prefix_type, prefix_len))
 
     return ips
 

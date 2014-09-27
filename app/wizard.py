@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import re
+
 from itertools import chain
 from flask import Blueprint, render_template, redirect, url_for, session,\
                   current_app, request, g
+from wtforms import SelectField
 from utils import session_key_needed, send_email, allocate_ips, activate_ips
 from models import db, IPRequest, EmailForm
 
@@ -41,9 +44,18 @@ def wizard_select_router():
 @wizard.route('/wizard/contact', methods=['GET', 'POST'])
 @session_key_needed('router_id', '.wizard_select_router')
 def wizard_get_email():
+    choices = []
+    prefix_defaults = current_app.config['PREFIX_DEFAULTS']
+    for k in prefix_defaults.keys():
+        #choices.append((re.sub('[\W_]+', '', k), k)
+        choices.append((k,k))
+    setattr(EmailForm, 'location_type', SelectField('Ort', choices=choices))
+
     form = EmailForm()
+
     if form.validate_on_submit():
         session['email'] = form.email.data
+        session['prefix_len'] = prefix_defaults[form.location_type.data]
         return redirect(url_for('.wizard_send_email'))
     router_db = current_app.config['ROUTER_DB']
     router = router_db[session['router_id']]
@@ -52,6 +64,7 @@ def wizard_get_email():
 @wizard.route('/wizard/email_sent')
 @session_key_needed('router_id', '.wizard_select_router')
 @session_key_needed('email', '.wizard_get_email')
+@session_key_needed('prefix_len', '.wizard_get_email')
 def wizard_send_email():
     router_db = current_app.config['ROUTER_DB']
     router_id = session['router_id']
@@ -66,7 +79,8 @@ def wizard_send_email():
                               num = ip_mesh_num),
         'hna' : allocate_ips(*api_params,
                               pool = current_app.config['API_POOL_HNA'],
-                              num = 1)
+                              num = 1,
+                              prefix_len = session['prefix_len'])
     }
 
     ips = list(chain(*ips.values()))
