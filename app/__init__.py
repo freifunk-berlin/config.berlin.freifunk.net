@@ -20,8 +20,8 @@ def create_app(config=None):
 
 def configure_app(app):
     # http://flask.pocoo.org/docs/config/#instance-folders
-    app.config.from_pyfile('default.cfg')
-    #app.config.from_pyfile('production.cfg', silent=True)
+    app.config.from_pyfile('../default.cfg')
+    app.config.from_pyfile('../config.cfg', silent=True)
 
 
 def configure_extensions(app):
