@@ -6,12 +6,13 @@ from itertools import chain
 from flask import Blueprint, render_template, redirect, url_for, session,\
                   current_app, request, g
 from wtforms import SelectField
-from utils import session_key_needed, send_email
+from utils import session_keys_needed, send_email
 from nipap import NipapApi
 from models import db, IPRequest, EmailForm
 
 
 wizard = Blueprint('wizard', __name__)
+
 
 @wizard.before_request
 def init_api():
@@ -19,6 +20,7 @@ def init_api():
     uri = 'http://%s:%s@%s' % (current_app.config['API_USER'],
               current_app.config['API_PASS'], current_app.config['API_HOST'])
     g.api.connect(uri)
+
 
 @wizard.route('/config/<token>')
 def wizard_get_config(token):
@@ -51,7 +53,7 @@ def wizard_select_router():
 
 
 @wizard.route('/wizard/contact', methods=['GET', 'POST'])
-@session_key_needed('router_id', '.wizard_select_router')
+@session_keys_needed(['router_id'], '.wizard_select_router')
 def wizard_get_email():
     choices = []
     prefix_defaults = current_app.config['PREFIX_DEFAULTS']
@@ -71,9 +73,8 @@ def wizard_get_email():
 
 
 @wizard.route('/wizard/email_sent')
-@session_key_needed('router_id', '.wizard_select_router')
-@session_key_needed('email', '.wizard_get_email')
-@session_key_needed('prefix_len', '.wizard_get_email')
+@session_keys_needed(['router_id'], '.wizard_select_router')
+@session_keys_needed(['email', 'prefix_len'], '.wizard_get_email')
 def wizard_send_email():
     router_db = current_app.config['ROUTER_DB']
     router_id = session['router_id']

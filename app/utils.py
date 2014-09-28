@@ -9,15 +9,16 @@ from flask.ext.mail import Message
 from .exts import mail
 
 
-def session_key_needed(key, endpoint):
-    def session_key_needed_(f):
+def session_keys_needed(keys, endpoint):
+    def session_keys_needed_(f):
         @wraps(f)
-        def session_key_needed__(*args, **kwargs):
-            if key not in session:
-                return redirect(url_for(endpoint))
+        def session_keys_needed__(*args, **kwargs):
+            for key in keys:
+                if key not in session:
+                    return redirect(url_for(endpoint))
             return f(*args, **kwargs)
-        return session_key_needed__
-    return session_key_needed_
+        return session_keys_needed__
+    return session_keys_needed_
 
 
 def gen_random_hash(length):
