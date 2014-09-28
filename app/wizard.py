@@ -22,11 +22,11 @@ def init_api():
     g.api.connect(uri)
 
 
-@wizard.route('/config/<token>')
+@wizard.route('/wizard/config/<token>')
 def wizard_get_config(token):
     r = IPRequest.query.filter_by(token=token).one()
     if not r.verified:
-        return redirect(url_for('.index'))
+        raise Exception('Request has not been verified yet')
 
     ips = {'mesh':[], 'hna':[]}
     for ip in g.api.get_prefixes_for_id(r.id):
@@ -55,20 +55,18 @@ def wizard_select_router():
 @wizard.route('/wizard/contact', methods=['GET', 'POST'])
 @session_keys_needed(['router_id'], '.wizard_select_router')
 def wizard_get_email():
-    choices = []
+    # add location type field dynamically (values are set in config)
     prefix_defaults = current_app.config['PREFIX_DEFAULTS']
-    for k in prefix_defaults.keys():
-        choices.append((k,k))
+    choices = [(k,k) for k in prefix_defaults.keys()]
     setattr(EmailForm, 'location_type', SelectField('Ort', choices=choices))
 
     form = EmailForm()
-
     if form.validate_on_submit():
         session['email'] = form.email.data
         session['prefix_len'] = prefix_defaults[form.location_type.data]
         return redirect(url_for('.wizard_send_email'))
-    router_db = current_app.config['ROUTER_DB']
-    router = router_db[session['router_id']]
+
+    router = current_app.config['ROUTER_DB'][session['router_id']]
     return render_template('email_form.html', form = form, router = router)
 
 
@@ -76,13 +74,12 @@ def wizard_get_email():
 @session_keys_needed(['router_id'], '.wizard_select_router')
 @session_keys_needed(['email', 'prefix_len'], '.wizard_get_email')
 def wizard_send_email():
-    router_db = current_app.config['ROUTER_DB']
-    router_id = session['router_id']
-    router = {'id': router_id, 'data': router_db[router_id]}
-    r = IPRequest(session['email'], router_id)
+    # add new request to database
+    data = current_app.config['ROUTER_DB'][session['router_id']]
+    router = {'id': session['router_id'], 'data': data}
+    r = IPRequest(session['email'], session['router_id'])
     db.session.add(r)
     db.session.commit()
-
 
     # allocate mesh IPs
     ip_mesh_num = 2 if router['data']['dualband'] else 1
