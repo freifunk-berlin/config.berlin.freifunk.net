@@ -3,9 +3,6 @@ flask-migrate
 flask-script
 flask-mail
 flask-sqlalchemy
-flask-testing
 flask-wtf
-validate_email
-nose
 pynipap
 itsdangerous
