@@ -7,7 +7,6 @@ from itertools import chain
 from flask import session, redirect, url_for, render_template
 from flask.ext.mail import Message
 from .exts import mail
-from nipap import Api
 
 
 def session_key_needed(key, endpoint):
@@ -39,33 +38,3 @@ def send_email(email, router, ips, url):
               recipients=[email],
               body = body)
     mail.send(msg)
-
-
-class NipapApi:
-    def __init__(self, app_id, api_user, api_pass, api_host):
-        self.app_id = app_id
-        self.api = Api(app_id)
-        self.api.connect('http://%s:%s@%s' % (api_user, api_pass, api_host))
-
-    def allocate_ips(self, pool, request_id, email, num = 1, prefix_len = None, prefix_type='reservation'):
-        data = {
-            'tags': [self.app_id],
-            'customer_id' : email,
-            'external_key' : request_id
-        }
-        ips = []
-        for i in range(num):
-            p = self.api.create_prefix_from_pool(pool, prefix_type, prefix_len,
-                    data=data)
-            ips.append(p)
-
-        return ips
-
-    def activate_ips(self, request_id):
-        for p in self.api.get_prefixes_by_key(request_id):
-            p.type = 'assignment'
-            p.save()
-
-    def get_prefixes_by_id(self, prefix_id):
-        prefixes = self.api.get_prefixes_by_key(prefix_id)
-        return [p.prefix for p in prefixes]

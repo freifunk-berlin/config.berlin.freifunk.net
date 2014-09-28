@@ -2,7 +2,7 @@
 
 import pynipap
 
-class Api:
+class NipapApi:
     """This class wraps pynipap into an useable API for creating prefixes.
        Before you can use API functions you have to connect to a valid 
        nipap instance like the following:
@@ -34,8 +34,9 @@ class Api:
        * create prefix with a specific prefix length from a pool named Mesh
            api.create_prefix_from_pool('Mesh', 26)
     """
-    def __init__(self, app_name):
-        pynipap.AuthOptions({'authoritative_source': app_name})
+    def __init__(self, app_id):
+        self.app_id = app_id
+        pynipap.AuthOptions({'authoritative_source': app_id})
 
     def connect(self, uri, vrf='default'):
         """Connects to nipap instance. Vrf parameter is optional."""
@@ -117,3 +118,26 @@ class Api:
         prefix = self._create_prefix(pool, prefix_type, prefix_len, data=data)
 
         return prefix.prefix
+
+    def allocate_ips(self, pool, request_id, email, num = 1, prefix_len = None, prefix_type='reservation'):
+        data = {
+            'tags': [self.app_id],
+            'customer_id' : email,
+            'external_key' : request_id
+        }
+        ips = []
+        for i in range(num):
+            p = self.create_prefix_from_pool(pool, prefix_type, prefix_len,
+                    data=data)
+            ips.append(p)
+
+        return ips
+
+    def activate_ips(self, request_id):
+        for p in self.get_prefixes_by_key(request_id):
+            p.type = 'assignment'
+            p.save()
+
+    def get_prefixes_for_id(self, prefix_id):
+        prefixes = self.get_prefixes_by_key(prefix_id)
+        return [p.prefix for p in prefixes]
