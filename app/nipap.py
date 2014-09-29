@@ -58,8 +58,8 @@ class NipapApi:
         req = self._get_by(cls, val1, val2)
         return req[0] if len(req) > 0 else None
 
-    def get_prefix_by_prefix(self, prefix):
-        """Searches for a Prefix by prefix."""
+    def get_prefix_by_cidr(self, prefix):
+        """Searches for a Prefix by cidr."""
         return self._get_one_by(pynipap.Prefix, 'prefix', prefix)
 
     def get_pool_by_name(self, name):
@@ -70,7 +70,7 @@ class NipapApi:
         """Searches for a vrf by name."""
         return self._get_one_by(pynipap.VRF, 'name', name)
 
-    def get_prefixes_by_key(self, external_key):
+    def get_prefixes_by_external_key(self, external_key):
         """Searches for prefixes by external_key."""
         return self._get_by(pynipap.Prefix, 'external_key', '%d' % external_key)
 
@@ -87,10 +87,6 @@ class NipapApi:
 
     def list_all_prefixes(self):
         return pynipap.Prefix.list()
-
-    def delete_prefix_by_id(self, external_key):
-        for p in self.get_prefixes_by_key(external_key):
-            p.remove()
 
     def create_prefix_by_prefix(self, prefix, name, email, pool = None):
         p = pynipap.Prefix()
@@ -149,10 +145,15 @@ class NipapApi:
         return ips
 
     def activate_ips(self, request_id):
-        for p in self.get_prefixes_by_key(request_id):
+        for p in self.get_prefixes_by_external_key(request_id):
             p.type = 'assignment'
             p.save()
 
     def get_prefixes_for_id(self, prefix_id):
-        prefixes = self.get_prefixes_by_key(prefix_id)
+        prefixes = self.get_prefixes_by_external_key(prefix_id)
         return [p.prefix for p in prefixes]
+
+    def delete_prefixes_by_id(self, external_key):
+        for p in self.get_prefixes_by_external_key(external_key):
+            p.remove()
+

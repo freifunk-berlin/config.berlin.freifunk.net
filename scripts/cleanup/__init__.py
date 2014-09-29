@@ -10,7 +10,7 @@ def shell_remove_unconfirmed_requests(hours):
 
     print("Found %d outdated entries." % qry.count())
     for r in qry.all():
-        get_api().delete_prefix_by_id(r.id)
+        get_api().delete_prefixes_by_id(r.id)
         print("\t * %s ...\t DELETED" % r.email)
         db.session.delete(r)
 
