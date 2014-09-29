@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from app.wizard import get_api
+from app.utils import get_api
 from app.models import db, IPRequest, EmailForm
 
 def shell_remove_unconfirmed_requests(hours):

@@ -4,9 +4,21 @@ import string
 from random import choice
 from functools import wraps
 from itertools import chain
-from flask import session, redirect, url_for, render_template
+from flask import session, redirect, url_for, render_template, g, current_app
 from flask.ext.mail import Message
+from .nipap import NipapApi
 from .exts import mail
+
+
+def get_api():
+    api = getattr(g, '_api', None)
+    if api is None:
+        api = g._api = NipapApi(current_app.config['APP_ID'])
+        uri = 'http://%s:%s@%s' % (current_app.config['API_USER'],
+                  current_app.config['API_PASS'], current_app.config['API_HOST'])
+        g._api.connect(uri)
+
+    return api
 
 
 def session_keys_needed(keys, endpoint):

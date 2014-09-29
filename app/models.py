@@ -8,7 +8,8 @@ from wtforms import StringField
 from wtforms.validators import Email, AnyOf
 from itsdangerous import URLSafeTimedSerializer
 from .exts import db
-from utils import gen_random_hash
+from .utils import gen_random_hash
+from .wizard import get_api
 
 class IPRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,15 +25,19 @@ class IPRequest(db.Model):
         self.token = gen_random_hash(32)
 
 
-    def verify_signed_token(self, ips, signed_token, timeout = 3600):
+    def verify_signed_token(self, signed_token, timeout = 3600):
         secret = current_app.config['SECRET_KEY']
-        serializer = URLSafeTimedSerializer(secret, " ".join(ips))
+        serializer = URLSafeTimedSerializer(secret, " ".join(self.ips))
         return self.token == serializer.loads(signed_token, max_age=timeout)
 
-    def gen_signed_token(self, ips):
+    def gen_signed_token(self):
         secret = current_app.config['SECRET_KEY']
-        serializer = URLSafeTimedSerializer(secret, " ".join(ips))
+        serializer = URLSafeTimedSerializer(secret, " ".join(self.ips))
         return serializer.dumps(self.token)
+
+    @property
+    def ips(self):
+        return get_api().get_prefixes_for_id(self.id)
 
     def __repr__(self):
         return '<IPRequest %r>' % self.email
