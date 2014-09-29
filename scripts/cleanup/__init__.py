@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from app.utils import get_api
 from app.models import db, IPRequest, EmailForm
 
-def shell_remove_unconfirmed_requests(hours):
+def delete_unconfirmed_requests(hours):
     current_time = datetime.utcnow()
     two_days_ago = current_time - timedelta(hours=hours)
     qry = IPRequest.query.filter(IPRequest.created_at <
