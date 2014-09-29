@@ -88,6 +88,17 @@ class NipapApi:
     def list_all_prefixes(self):
         return pynipap.Prefix.list()
 
+    def create_prefix_by_prefix(self, prefix, name, email, pool = None):
+        p = pynipap.Prefix()
+        p.type = 'assignment'
+        p.prefix = prefix
+        p.customer_id = "%s <%s>" % (name, email)
+
+        if pool is not None:
+            p.pool_id = self.get_pool_by_name(pool).id
+
+        p.save()
+
     def _create_prefix(self, pool, prefix_type, prefix_len = None, data = {}):
         prefix = pynipap.Prefix()
         prefix.vrf = self.vrf

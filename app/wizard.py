@@ -14,12 +14,15 @@ from models import db, IPRequest, EmailForm
 wizard = Blueprint('wizard', __name__)
 
 
-@wizard.before_request
-def init_api():
-    g.api = NipapApi(current_app.config['APP_ID'])
-    uri = 'http://%s:%s@%s' % (current_app.config['API_USER'],
-              current_app.config['API_PASS'], current_app.config['API_HOST'])
-    g.api.connect(uri)
+def get_api():
+    api = getattr(g, '_api', None)
+    if api is None:
+        api = g._api = NipapApi(current_app.config['APP_ID'])
+        uri = 'http://%s:%s@%s' % (current_app.config['API_USER'],
+                  current_app.config['API_PASS'], current_app.config['API_HOST'])
+        g._api.connect(uri)
+
+    return api
 
 
 @wizard.route('/wizard/config/<token>')
@@ -29,7 +32,7 @@ def wizard_get_config(token):
         raise Exception('Request has not been verified yet')
 
     ips = {'mesh':[], 'hna':[]}
-    for ip in g.api.get_prefixes_for_id(r.id):
+    for ip in get_api().get_prefixes_for_id(r.id):
         if ip.endswith('/32'):
             ips['mesh'].append(ip.replace('/32', ''))
         else:
@@ -83,14 +86,14 @@ def wizard_send_email():
 
     # allocate mesh IPs
     ip_mesh_num = 2 if router['data']['dualband'] else 1
-    g.api.allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
+    get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
         ip_mesh_num)
 
     # allocate HNA network
-    g.api.allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
+    get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
         prefix_len = session['prefix_len'])
 
-    ips = g.api.get_prefixes_for_id(r.id)
+    ips = get_api().get_prefixes_for_id(r.id)
     url = url_for(".wizard_activate", request_id=r.id,
                   signed_token=r.gen_signed_token(ips), _external=True)
     send_email(session['email'], router, ips, url)
@@ -104,11 +107,11 @@ def wizard_send_email():
 @wizard.route('/wizard/activate/<int:request_id>/<signed_token>')
 def wizard_activate(request_id, signed_token):
     r = IPRequest.query.get(request_id)
-    ips = g.api.get_prefixes_for_id(r.id)
+    ips = get_api().get_prefixes_for_id(r.id)
     if not r.verify_signed_token(ips, signed_token, timeout = 3600):
         raise Exception("Invalid Token")
 
-    g.api.activate_ips(r.id)
+    get_api().activate_ips(r.id)
     r.verified = True
 
     db.session.add(r)
