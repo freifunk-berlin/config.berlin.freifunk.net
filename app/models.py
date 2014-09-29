@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
 from flask import current_app
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_wtf import Form
@@ -15,6 +16,7 @@ class IPRequest(db.Model):
     router_id = db.Column(db.String(120))
     verified = db.Column(db.Boolean(), default=False)
     token  = db.Column(db.String(128), unique=True)
+    created_at = db.Column(db.DateTime(), default=datetime.now)
 
     def __init__(self, email, router_id):
         self.email = email

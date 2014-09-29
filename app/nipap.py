@@ -88,6 +88,10 @@ class NipapApi:
     def list_all_prefixes(self):
         return pynipap.Prefix.list()
 
+    def delete_prefix_by_id(self, external_key):
+        for p in self.get_prefixes_by_key(external_key):
+            p.remove()
+
     def create_prefix_by_prefix(self, prefix, name, email, pool = None):
         p = pynipap.Prefix()
         p.type = 'assignment'

@@ -5,6 +5,7 @@ from flask.ext.migrate import MigrateCommand
 from app import create_app
 from app.exts import db
 from scripts.legacy_importer import import_db
+from scripts.cleanup import shell_remove_unconfirmed_requests
 
 app = create_app()
 
@@ -15,6 +16,11 @@ manager.add_command('db', MigrateCommand)
 def resetdb():
     db.drop_all()
     db.create_all()
+
+@manager.command
+@manager.option('-h', '--hours', help='hours after a request should be deleted')
+def remove_unconfirmed_requests(hours = 48):
+    shell_remove_unconfirmed_requests(hours)
 
 @manager.command
 @manager.option('-u', '--user', help='database user')
