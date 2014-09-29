@@ -23,7 +23,11 @@ def import_db(db_user, db_pass, db_host, db_name):
         for c in collapsed:
             pool = current_app.config['API_POOL_LEGACY']
             try: 
-                get_api().create_prefix_by_prefix(c, user[1], user[3], pool)
+                data = {
+                    'description': user[1],
+                    'tags': ['legacy','imported']
+                }
+                get_api().create_prefix_by_cidr(c, user[3], pool, data)
             except NipapDuplicateError:
                 pass
 
