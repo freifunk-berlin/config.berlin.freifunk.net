@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, redirect, url_for, session,\
                   current_app, request, g
 from wtforms import SelectField
 from utils import session_keys_needed, send_email, get_api
-from models import db, IPRequest, EmailForm
+from .models import db, IPRequest, EmailForm
 
 
 wizard = Blueprint('wizard', __name__)
