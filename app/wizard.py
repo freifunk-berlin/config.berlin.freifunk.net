@@ -33,6 +33,7 @@ def wizard_get_config(token):
     return render_template('show_config.html', ips=ips, firmware=firmware, router=router)
 
 
+@wizard.route('/')
 @wizard.route('/wizard/routers')
 def wizard_select_router():
     router_db = current_app.config['ROUTER_DB']
@@ -104,8 +105,3 @@ def wizard_activate(request_id, signed_token):
     db.session.commit()
 
     return redirect(url_for('.wizard_get_config', token = r.token))
-
-
-@wizard.route('/')
-def index():
-    return render_template('welcome.html')
