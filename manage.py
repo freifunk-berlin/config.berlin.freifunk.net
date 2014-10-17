@@ -20,7 +20,7 @@ def resetdb():
 @manager.command
 @manager.option('-h', '--hours', help='hours after a request should be deleted')
 def remove_unconfirmed_requests(hours = 48):
-    delete_unconfirmed_requests(hours)
+    delete_unconfirmed_requests(int(hours))
 
 @manager.command
 @manager.option('-u', '--user', help='database user')
