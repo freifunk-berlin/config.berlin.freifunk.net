@@ -6,7 +6,7 @@ SECRET_KEY = '<enter your secret here>'
 
 SQLALCHEMY_DATABASE_URI = '<SQL_ALCHEMY_DATABASE>''
 
-MAIL_FROM = 'no-replay@ip.berlin.freifunk.net'
+MAIL_FROM = 'no-reply@ip.berlin.freifunk.net'
 
 API_USER = 'NIPAP_USERNAME'
 API_PASS = 'NIPAP_PASSWORT'
