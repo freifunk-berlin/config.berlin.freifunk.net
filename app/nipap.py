@@ -119,9 +119,10 @@ class NipapApi:
 
         return prefix.prefix
 
-    def allocate_ips(self, pool, request_id, email, num = 1, prefix_len = None, prefix_type='reservation'):
+    def allocate_ips(self, pool, request_id, email, hostname, num = 1, prefix_len = None, prefix_type='reservation'):
         data = {
             'tags': [self.app_id],
+            'description' : hostname,
             'customer_id' : email,
             'external_key' : request_id
         }

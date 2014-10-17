@@ -77,11 +77,11 @@ def wizard_send_email():
     router = router_db_get_entry(router_db, session['router_id'])
     ip_mesh_num = 2 if router['dualband'] else 1
     get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
-        ip_mesh_num)
+        r.hostname, ip_mesh_num)
 
     # allocate HNA network
     get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
-        prefix_len = session['prefix_len'])
+        r.hostname, prefix_len = session['prefix_len'])
 
     url = url_for(".wizard_activate", request_id=r.id,
                   signed_token=r.gen_signed_token(), _external=True)
