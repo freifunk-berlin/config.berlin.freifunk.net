@@ -4,7 +4,7 @@
         <h2 class="col-md-12">Konfiguration</h2>
         <div class="col-md-12">
           <p>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            Im folgenden findest du eine Auflistung der Konfigurationsparameter für deinen Router: 
           </p>
         </div>
 
@@ -14,7 +14,11 @@
             <dd>{{router.name}}</dd>
 
             <dt>Firmware</dt>
-            <dd><a href="{{firmware}}">Freifunk Berlin</a></dd>
+            <dd>
+            {% for name,url in router.firmwares.items() %}
+            <a href="{{url}}">{{name}}.bin</a>
+            {% endfor %}
+            </dd>
 
             <dt>Mesh-IPs</dt>
             <dd>
@@ -43,12 +47,8 @@
 
       <div class="row">
         <p class="col-md-12">
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+          Mit Hilfe der Konfigurationsparameter kannst du nun einen Router <i>flashen</i>. Das heißt das Freifunk-Betriebsystem aufspielen und konfigurieren. Hierzu folgst du am besten den Anleitungen:
         </p>
-      </div>
-
-      <div class="row">
-        <h4 class="col-md-12">Anleitungen</h4>
         <ul class="col-md-l col-md-offset-1">
           <li><a href="">Router flashen</a></li>
           <li><a href="">Router konfigurieren</a></li>

@@ -1,18 +1,14 @@
 Hey,
 
-du (oder jmd anders) hat IP-Adressen für den Router '{{router}}' beantragt. Dir
-wurden folgende Adressen zu gewiesen:
-
-{% for ip in ips %}* {{ip}}
-{% endfor %}
-
-Um die Adressen benutzen zu können musst du sie zuerst noch aktivieren. Klicke
-dazu bitte auf folgenden Link:
+es scheint als würdest du bei Freifunk Berlin mitmachen. Du hast eine Konfiguration
+für den Router '{{router}}' beantragt. Klicke bitte auf folgenden Link um die 
+Konfiguration freizuschalten:
 
   {{url}}
 
-Wenn du gar nicht die IP-Adressen beantragt hast oder sie doch nicht willst
-ignoriere diese Mail und die Adressen werden in 48 Stunden wieder freigegeben.
+Wenn du unabsichtlich oder jmd anders die Konfiguration auf deine Emailadresse
+beantragt hat, dann ignoriere diese Mail und der Antrag wird in 48 Stunden automatisch
+gelöscht.
 
 Grüße
 Freifunk Berlin

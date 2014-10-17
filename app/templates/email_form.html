@@ -1,4 +1,4 @@
-{% macro render_bootstrap_field(field, placeholder) %}
+{% macro render_bootstrap_field(field, placeholder, help) %}
 
 <div class="form-group {% if field.errors %} error {% endif %}">
     <label class="col-md-2 control-label">{{ field.label }}</label>
@@ -9,6 +9,7 @@
                 <span class="errors">{{ error }}</span><br>
             {% endfor %}
         {% endif %}
+        <span class="help-block">{{ help|safe }}</span>
     </div>
 </div>
 {% endmacro %}
@@ -16,15 +17,9 @@
 {% extends "layout.html" %}
 {% block body %}
       <div class="row">
-        <h2 class="col-md-12">Kontakt</h2>
+        <h2 class="col-md-12">Standortdaten</h2>
 
-        <div class="col-md-12">
-          <p>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-          </p>
-        </div>
-
-        <div class="col-md-12">
+        <div class="row flexible">
           <p class="col-md-4 form-router text-center">
             <img src="{{url_for('static', filename=router.img)}}" alt="{{router.name}}" />
             {{router.name}}
@@ -32,8 +27,9 @@
           <form class="form-horizontal col-md-8" role="form" action="{{url_for('.wizard_get_email')}}" method="post">
 
             {{ form.csrf_token }}
-            {{ render_bootstrap_field(form.email, "Email") }}
-            {{ render_bootstrap_field(form.location_type) }}
+            {{ render_bootstrap_field(form.hostname, "Spitzname des Routers", "Bitte gib einen kurzen und eindeutigen Namen für deinen Router ein (z.B. kreative Namen wie <i>funkenpumpe</i> oder <i>HermannStr42_VH</i>).") }}
+            {{ render_bootstrap_field(form.email, "Kontaktadresse", "Deine E-Mail-Addresse ist notwendig, damit wir dir die Konfiguration und die Firmware zu schicken können. Außerdem können wir dich dann konaktieren, falls wir dir wichtige Dinge über das Freifunknetz mitteilen müssen.")}}
+            {{ render_bootstrap_field(form.location_type, help="Wähle einen Standorttyp damit wir einschätzen können wie viele Benutzer_innen (IP-Adressen) an deinem Standort gleichzeitig aktiv sind. Cafés und Kneipen oder Orte mit vielen Menschen haben mehr gleichzeitige Benutzer_innen als dein Freifunkrouter zu Hause.") }}
             {{ render_bootstrap_field(form.captcha, "Hauptstadt Deutschlands?") }}
 
             <div class="form-group">

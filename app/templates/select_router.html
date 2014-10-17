@@ -8,16 +8,16 @@
           einer Vielzahl von Routern. Hierzu brauchst du eine sogenannte
           Firmware (Betriebsystem) die du auf deinem Router installiert.
           Diese ist geräteabhängig. Deswegen wähle deinen Router aus der Liste
-          aus.
+          aus:
           </p>
         </div>
       </div>
 
       <div class="row">
         <ul id="routers" class="list-unstyled col-md-12">
-          {% for id, device in routers|dictsort %}
+          {% for id, device in routers %}
           <li class="col-md-3">
-            <a class="text-center thumbnail router" href="{{url_for('.wizard_select_router', id=id)}}">
+            <a class="text-center thumbnail router" href="{{url_for('.wizard_select_router', router_id=id)}}">
               <img src="{{url_for('static', filename=device.img)}}" alt="{{device.name}}" />
                 {{device.name}}
             </a>
