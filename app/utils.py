@@ -45,7 +45,7 @@ def send_email(email, hostname, router, url):
     )
 
     msg = Message("[Freifunk Berlin] Konfiguration - %s" % hostname,
-              sender="no-reply@config.berlin.freifunk.net",
+              sender=current_app.config['MAIL_FROM'],
               recipients=[email],
               body = body)
     mail.send(msg)
