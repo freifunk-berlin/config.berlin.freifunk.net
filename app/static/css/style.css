@@ -94,3 +94,8 @@ code {
   display: flex;
   align-items: center;
 }
+
+.italic {
+  font-size: 0.9em;
+  font-style: italic;
+}

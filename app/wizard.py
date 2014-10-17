@@ -38,14 +38,14 @@ def wizard_get_config(token):
 def wizard_select_router(router_id = None):
     if router_db_has_entry(current_app.config['ROUTER_DB'], router_id):
         session['router_id'] = router_id
-        return redirect(url_for('.wizard_get_email'))
+        return redirect(url_for('.wizard_form'))
     routers = router_db_list(current_app.config['ROUTER_DB'])
     return render_template('select_router.html', routers=routers)
 
 
-@wizard.route('/wizard/contact', methods=['GET', 'POST'])
+@wizard.route('/wizard/form', methods=['GET', 'POST'])
 @session_keys_needed(['router_id'], '.wizard_select_router')
-def wizard_get_email():
+def wizard_form():
     # add location type field dynamically (values are set in config)
     prefix_defaults = current_app.config['PREFIX_DEFAULTS']
     choices = [(k,k) for k in prefix_defaults.keys()]
@@ -60,12 +60,12 @@ def wizard_get_email():
 
     router_db = current_app.config['ROUTER_DB']
     router = router_db_get_entry(router_db, session['router_id'])
-    return render_template('email_form.html', form = form, router = router)
+    return render_template('form.html', form = form, router = router)
 
 
 @wizard.route('/wizard/email_sent')
 @session_keys_needed(['router_id'], '.wizard_select_router')
-@session_keys_needed(['email', 'hostname', 'prefix_len'], '.wizard_get_email')
+@session_keys_needed(['email', 'hostname', 'prefix_len'], '.wizard_form')
 def wizard_send_email():
     # add new request to database
     router_db = current_app.config['ROUTER_DB']

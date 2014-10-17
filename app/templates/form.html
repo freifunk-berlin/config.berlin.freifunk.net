@@ -9,7 +9,7 @@
                 <span class="errors">{{ error }}</span><br>
             {% endfor %}
         {% endif %}
-        <span class="help-block">{{ help|safe }}</span>
+        <span class="help-block italic">{{ help|safe }}</span>
     </div>
 </div>
 {% endmacro %}
@@ -24,12 +24,12 @@
             <img src="{{url_for('static', filename=router.img)}}" alt="{{router.name}}" />
             {{router.name}}
           </p>
-          <form class="form-horizontal col-md-8" role="form" action="{{url_for('.wizard_get_email')}}" method="post">
+          <form class="form-horizontal col-md-8" role="form" action="{{url_for('.wizard_form')}}" method="post">
 
             {{ form.csrf_token }}
-            {{ render_bootstrap_field(form.hostname, "Spitzname des Routers", "Bitte gib einen kurzen und eindeutigen Namen für deinen Router ein (z.B. kreative Namen wie <i>funkenpumpe</i> oder <i>HermannStr42_VH</i>).") }}
-            {{ render_bootstrap_field(form.email, "Kontaktadresse", "Deine E-Mail-Addresse ist notwendig, damit wir dir die Konfiguration und die Firmware zu schicken können. Außerdem können wir dich dann konaktieren, falls wir dir wichtige Dinge über das Freifunknetz mitteilen müssen.")}}
-            {{ render_bootstrap_field(form.location_type, help="Wähle einen Standorttyp damit wir einschätzen können wie viele Benutzer_innen (IP-Adressen) an deinem Standort gleichzeitig aktiv sind. Cafés und Kneipen oder Orte mit vielen Menschen haben mehr gleichzeitige Benutzer_innen als dein Freifunkrouter zu Hause.") }}
+            {{ render_bootstrap_field(form.hostname, "Spitzname des Routers", "Ein kurzer und eindeutiger Name für deinen Router (z.B. <i>funkenpumpe</i> oder <i>HermannStr42_VH</i>).") }}
+            {{ render_bootstrap_field(form.email, "Kontaktadresse", "Notwendig damit dir Router-Konfiguration und Firmware per Email zu geschickt werden können.") }}
+            {{ render_bootstrap_field(form.location_type, help="Je nach Standort benutzen mehr oder weniger Menschen gleichzeitig den Freifunkrouter. Cafés und Kneipen haben mehr gleichzeitige Benutzer_innen und brauchen so mehr Adressen als dein Freifunkrouter zu Hause.") }}
             {{ render_bootstrap_field(form.captcha, "Hauptstadt Deutschlands?") }}
 
             <div class="form-group">
