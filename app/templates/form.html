@@ -28,8 +28,8 @@
 
             {{ form.csrf_token }}
             {{ render_bootstrap_field(form.hostname, "Spitzname des Routers", "Ein kurzer und eindeutiger Name für deinen Router (z.B. <i>funkenpumpe</i> oder <i>HermannStr42_VH</i>).") }}
-            {{ render_bootstrap_field(form.email, "Kontaktadresse", "Notwendig damit dir Router-Konfiguration und Firmware per Email zu geschickt werden können.") }}
-            {{ render_bootstrap_field(form.location_type, help="Je nach Standort benutzen mehr oder weniger Menschen zur selben Zeit den Freifunkrouter. Cafés und Kneipen haben mehr gleichzeitige Benutzer_innen und brauchen so mehr IP-Adressen als dein Router zu Hause.") }}
+            {{ render_bootstrap_field(form.email, "Kontaktadresse", "Notwendig, damit wir dir die Router-Konfiguration und Firmware per Email zu schicken können.") }}
+            {{ render_bootstrap_field(form.location_type, help="Je nach Standort benutzen mehr oder weniger viele Menschen zur selben Zeit den Freifunk-Router. Cafés und Kneipen haben mehr gleichzeitige Benutzer_innen und brauchen so mehr IP-Adressen als ein Router zu Hause.") }}
             {{ render_bootstrap_field(form.captcha, "Hauptstadt Deutschlands?") }}
 
             <div class="form-group">
