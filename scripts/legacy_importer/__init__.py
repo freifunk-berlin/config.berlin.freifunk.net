@@ -1,7 +1,7 @@
 # coding: utf-8
 from flask import current_app
 from app.wizard import get_api
-from tables import metadata as db_metadata, t_usr, t_ip
+from .tables import metadata as db_metadata, t_usr, t_ip
 from sqlalchemy import create_engine
 from app.nipap import NipapApi
 from ipaddress import IPv4Network, collapse_addresses

@@ -6,7 +6,7 @@ from itertools import chain
 from flask import Blueprint, render_template, redirect, url_for, session,\
                   current_app, request, g
 from wtforms import SelectField
-from utils import session_keys_needed, send_email, get_api, router_db_get_entry,\
+from .utils import session_keys_needed, send_email, get_api, router_db_get_entry,\
                   router_db_has_entry, router_db_list
 from .models import db, IPRequest, EmailForm
 
