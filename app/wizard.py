@@ -38,14 +38,14 @@ def wizard_get_config(token):
 def wizard_select_router(router_id = None):
     if router_db_has_entry(current_app.config['ROUTER_DB'], router_id):
         session['router_id'] = router_id
-        return redirect(url_for('.wizard_form'))
+        return redirect(url_for('.wizard_form', router_id = router_id))
+
     routers = router_db_list(current_app.config['ROUTER_DB'])
     return render_template('select_router.html', routers=routers)
 
 
-@wizard.route('/wizard/form', methods=['GET', 'POST'])
-@session_keys_needed(['router_id'], '.wizard_select_router')
-def wizard_form():
+@wizard.route('/wizard/forms/<path:router_id>', methods=['GET', 'POST'])
+def wizard_form(router_id):
     # add location type field dynamically (values are set in config)
     prefix_defaults = current_app.config['PREFIX_DEFAULTS']
     choices = [(k,k) for k in prefix_defaults.keys()]
@@ -53,45 +53,43 @@ def wizard_form():
 
     form = EmailForm()
     if form.validate_on_submit():
-        session['email'] = form.email.data
-        session['hostname'] = form.hostname.data
-        session['prefix_len'] = prefix_defaults[form.location_type.data]
+        wizard_form_process(
+            router_id,
+            form.email.data,
+            form.hostname.data,
+            prefix_defaults[form.location_type.data])
         return redirect(url_for('.wizard_send_email'))
 
     router_db = current_app.config['ROUTER_DB']
-    router = router_db_get_entry(router_db, session['router_id'])
+    router = router_db_get_entry(router_db, router_id)
     return render_template('form.html', form = form, router = router)
 
 
-@wizard.route('/wizard/email_sent')
-@session_keys_needed(['router_id'], '.wizard_select_router')
-@session_keys_needed(['email', 'hostname', 'prefix_len'], '.wizard_form')
-def wizard_send_email():
+def wizard_form_process(router_id, email, hostname, prefix_len):
     # add new request to database
     router_db = current_app.config['ROUTER_DB']
-    r = IPRequest(session['hostname'], session['email'], session['router_id'])
+    r = IPRequest(hostname, email, router_id)
     db.session.add(r)
     db.session.commit()
 
     # allocate mesh IPs
-    router = router_db_get_entry(router_db, session['router_id'])
+    router = router_db_get_entry(router_db, router_id)
     ip_mesh_num = 2 if router['dualband'] else 1
     get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
         r.hostname, ip_mesh_num)
 
     # allocate HNA network
     get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
-        r.hostname, prefix_len = session['prefix_len'])
+        r.hostname, prefix_len = prefix_len)
 
     url = url_for(".wizard_activate", request_id=r.id,
                   signed_token=r.gen_signed_token(), _external=True)
-    send_email(session['email'], r.hostname, router, url)
+    send_email(email, r.hostname, router, url)
 
-    for k in ('email', 'router_id'):
-        del session[k]
 
+@wizard.route('/wizard/email_sent')
+def wizard_send_email():
     return render_template('waiting_for_confirmation.html')
-
 
 @wizard.route('/wizard/activate/<int:request_id>/<signed_token>')
 def wizard_activate(request_id, signed_token):
