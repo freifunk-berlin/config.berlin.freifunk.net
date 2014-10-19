@@ -29,7 +29,7 @@ def wizard_get_config(token):
     router_db = current_app.config['ROUTER_DB']
     base_url = current_app.config['FIRMWARE_BASE_URL']
     router = router_db_get_entry(router_db, r.router_id, base_url)
-                
+
     return render_template('show_config.html', ips=ips, router=router)
 
 

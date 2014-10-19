@@ -87,8 +87,8 @@ def router_db_has_entry(router_db, router_id):
 
 def router_db_list(router_db):
     for target, subtargets  in sorted(router_db['entries'].items()):
-        for subtarget, profiles in sorted(subtargets['entries'].items()): 
-            for profile, entries in sorted(profiles['entries'].items()): 
-                for device, data in sorted(entries['entries'].items()): 
+        for subtarget, profiles in sorted(subtargets['entries'].items()):
+            for profile, entries in sorted(profiles['entries'].items()):
+                for device, data in sorted(entries['entries'].items()):
                     name = "%s/%s/%s/%s" % (target, subtarget, profile, device)
                     yield (name, data)
