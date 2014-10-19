@@ -86,6 +86,13 @@ Install
     $ cp config.cfg.dist config.cfg
     $ vim config.cfg                    # add MAIL_PORT = 1025 for development
 
+We use flask-migrate for database creation and migrations. To create our
+database and tables you have to use the following commands:
+
+    $ python manage.py db init
+    $ python manage.py db migrate
+    $ python manage.py db upgrade
+
 
 Dev Server (including dev smtp server for emails)
 
@@ -93,10 +100,3 @@ Dev Server (including dev smtp server for emails)
     $ python manage.py runserver -p 5001
      * Running on http://127.0.0.1:5001/
      * Restarting with reloader
-
-
-For database migrations
-
-    $ python manage.py db init
-    $ python manage.py db migrate
-    $ python manage.py db upgrade
