@@ -6,9 +6,9 @@ from itertools import chain
 from flask import Blueprint, render_template, redirect, url_for, session,\
                   current_app, request, g
 from wtforms import SelectField
-from .utils import session_keys_needed, send_email, get_api, router_db_get_entry,\
-                  router_db_has_entry, router_db_list
-from .models import db, IPRequest, EmailForm
+from .utils import wizard_form_process, send_email, get_api,\
+                   router_db_get_entry, router_db_has_entry, router_db_list
+from .models import db, EmailForm
 
 
 wizard = Blueprint('wizard', __name__)
@@ -63,28 +63,6 @@ def wizard_form(router_id):
     router_db = current_app.config['ROUTER_DB']
     router = router_db_get_entry(router_db, router_id)
     return render_template('form.html', form = form, router = router)
-
-
-def wizard_form_process(router_id, email, hostname, prefix_len):
-    # add new request to database
-    router_db = current_app.config['ROUTER_DB']
-    r = IPRequest(hostname, email, router_id)
-    db.session.add(r)
-    db.session.commit()
-
-    # allocate mesh IPs
-    router = router_db_get_entry(router_db, router_id)
-    ip_mesh_num = 2 if router['dualband'] else 1
-    get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
-        r.hostname, ip_mesh_num)
-
-    # allocate HNA network
-    get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
-        r.hostname, prefix_len = prefix_len)
-
-    url = url_for(".wizard_activate", request_id=r.id,
-                  signed_token=r.gen_signed_token(), _external=True)
-    send_email(email, r.hostname, router, url)
 
 
 @wizard.route('/wizard/email_sent')

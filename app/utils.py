@@ -21,16 +21,30 @@ def get_api():
     return api
 
 
-def session_keys_needed(keys, endpoint):
-    def session_keys_needed_(f):
-        @wraps(f)
-        def session_keys_needed__(*args, **kwargs):
-            for key in keys:
-                if key not in session:
-                    return redirect(url_for(endpoint))
-            return f(*args, **kwargs)
-        return session_keys_needed__
-    return session_keys_needed_
+def wizard_form_process(router_id, email, hostname, prefix_len):
+    """Process the data gathered from the input form, by performing all steps
+       needed to assign enough ips for the router model of the user. """
+
+    from .models import db, IPRequest
+    # add new request to database
+    router_db = current_app.config['ROUTER_DB']
+    r = IPRequest(hostname, email, router_id)
+    db.session.add(r)
+    db.session.commit()
+
+    # allocate mesh IPs
+    router = router_db_get_entry(router_db, router_id)
+    ip_mesh_num = 2 if router['dualband'] else 1
+    get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
+        r.hostname, ip_mesh_num)
+
+    # allocate HNA network
+    get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
+        r.hostname, prefix_len = prefix_len)
+
+    url = url_for(".wizard_activate", request_id=r.id,
+                  signed_token=r.gen_signed_token(), _external=True)
+    send_email(email, r.hostname, router, url)
 
 
 def gen_random_hash(length):
