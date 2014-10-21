@@ -33,8 +33,7 @@ def wizard_form_process(router_id, email, hostname, prefix_len):
     db.session.commit()
 
     # allocate mesh IPs
-    router = router_db_get_entry(router_db, router_id)
-    ip_mesh_num = 2 if router['dualband'] else 1
+    ip_mesh_num = 2 if r.router['dualband'] else 1
     get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
         r.hostname, ip_mesh_num)
 
@@ -42,10 +41,7 @@ def wizard_form_process(router_id, email, hostname, prefix_len):
     get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
         r.hostname, prefix_len = prefix_len)
 
-    url = url_for(".wizard_activate", request_id=r.id,
-                  signed_token=r.gen_signed_token(), _external=True)
-    send_email(email, r.hostname, router, url)
-
+    return r
 
 def gen_random_hash(length):
     digits = string.ascii_letters + string.digits

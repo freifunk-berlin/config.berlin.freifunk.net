@@ -27,20 +27,18 @@ def wizard_get_config(token):
             ips['mesh'].append(ip.replace('/32', ''))
         else:
             ips['hna'].append(ip)
-    router_db = current_app.config['ROUTER_DB']
-    base_url = current_app.config['FIRMWARE_BASE_URL']
-    router = router_db_get_entry(router_db, r.router_id, base_url)
 
-    return render_template('show_config.html', ips=ips, router=router)
+    return render_template('show_config.html', ips=ips, router=r.router)
 
 
 @wizard.route('/')
 @wizard.route('/wizard/routers/<path:router_id>')
 def wizard_select_router(router_id = None):
-    if router_db_has_entry(current_app.config['ROUTER_DB'], router_id):
+    router_db = current_app.config['router_db']
+    if router_db_has_entry(router_db, router_id):
         return redirect(url_for('.wizard_form', router_id = router_id))
 
-    routers = router_db_list(current_app.config['ROUTER_DB'])
+    routers = router_db_list(router_db)
     return render_template('select_router.html', routers=routers)
 
 
@@ -53,11 +51,15 @@ def wizard_form(router_id):
 
     form = EmailForm()
     if form.validate_on_submit():
-        wizard_form_process(
+        r = wizard_form_process(
             router_id,
             form.email.data,
             form.hostname.data,
             prefix_defaults[form.location_type.data])
+
+        url = url_for(".wizard_activate", request_id=r.id,
+                      signed_token=r.gen_signed_token(), _external=True)
+        send_email(r.email, r.hostname, r.router, url)
         return redirect(url_for('.wizard_send_email'))
 
     router_db = current_app.config['ROUTER_DB']
