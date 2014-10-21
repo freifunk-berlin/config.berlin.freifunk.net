@@ -3,14 +3,13 @@ Freifunk Berlin IPAM
 
 Our ip address management system is basically a running NIPAP instance with two
 frontends:
-
-* nipap-www for advanced users (typically backbone maintainers) 
+* nipap-www for advanced users (typically backbone maintainers)
 * nipap-wizard for others
 
 How to install nipap for development
 ------------------------------------
 
-The Mafile in v0.26.4 seems to be broken. There are patches in directory
+The Makefile in v0.26.4 seems to be broken. There are patches in directory
 `patches` to fix this. You will need `postgresql` and `virtualenv2` as well.
 
 Get source and patch it:

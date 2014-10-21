@@ -1,7 +1,7 @@
 # coding: utf-8
 from flask import current_app
 from app.wizard import get_api
-from tables import metadata as db_metadata, t_usr, t_ip
+from .tables import metadata as db_metadata, t_usr, t_ip
 from sqlalchemy import create_engine
 from app.nipap import NipapApi
 from ipaddress import IPv4Network, collapse_addresses
@@ -22,7 +22,7 @@ def import_db(db_user, db_pass, db_host, db_name):
         collapsed = [c.compressed for c in collapse_addresses(networks)]
         for c in collapsed:
             pool = current_app.config['API_POOL_LEGACY']
-            try: 
+            try:
                 data = {
                     'description': user[1],
                     'tags': ['legacy','imported']
@@ -32,4 +32,3 @@ def import_db(db_user, db_pass, db_host, db_name):
                 pass
 
         print("\t%s saved." % ",".join(collapsed))
-
