@@ -8,7 +8,8 @@ from flask import Blueprint, render_template, redirect, url_for, current_app,\
 from wtforms import SelectField
 from .utils import wizard_form_process, send_email, get_api,\
                    router_db_get_entry, router_db_has_entry, router_db_list
-from .models import db, EmailForm
+from .models import IPRequest, EmailForm
+from .exts import db
 
 
 wizard = Blueprint('wizard', __name__)
