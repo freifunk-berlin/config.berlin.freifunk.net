@@ -34,7 +34,7 @@ def wizard_get_config(token):
 @wizard.route('/')
 @wizard.route('/wizard/routers/<path:router_id>')
 def wizard_select_router(router_id = None):
-    router_db = current_app.config['router_db']
+    router_db = current_app.config['ROUTER_DB']
     if router_db_has_entry(router_db, router_id):
         return redirect(url_for('.wizard_form', router_id = router_id))
 
