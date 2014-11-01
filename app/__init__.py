@@ -30,6 +30,9 @@ def configure_app(app):
         from logging.handlers import RotatingFileHandler
         file_handler = RotatingFileHandler(app.config['LOG_FILE_PATH'])
         file_handler.setLevel(logging.WARNING)
+        file_handler.setFormatter(logging.Formatter(
+            '%(asctime)s %(levelname)s: %(message)s'
+            '[in %(pathname)s:%(lineno)d]'))
         app.logger.addHandler(file_handler)
 
 
