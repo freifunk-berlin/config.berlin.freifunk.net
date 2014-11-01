@@ -26,20 +26,26 @@ def wizard_form_process(router_id, email, hostname, prefix_len):
        needed to assign enough ips for the router model of the user. """
 
     from .models import db, IPRequest
-    # add new request to database
-    router_db = current_app.config['ROUTER_DB']
-    r = IPRequest(hostname, email, router_id)
-    db.session.add(r)
-    db.session.commit()
+    try:
+        # add new request to database
+        router_db = current_app.config['ROUTER_DB']
+        r = IPRequest(hostname, email, router_id)
+        db.session.add(r)
+        db.session.commit()
 
-    # allocate mesh IPs
-    ip_mesh_num = 2 if r.router['dualband'] else 1
-    get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
-        r.hostname, ip_mesh_num)
+        # allocate mesh IPs
+        ip_mesh_num = 2 if r.router['dualband'] else 1
+        get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
+            r.hostname, ip_mesh_num)
 
-    # allocate HNA network
-    get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
-        r.hostname, prefix_len = prefix_len)
+        # allocate HNA network
+        get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
+            r.hostname, prefix_len = prefix_len)
+    except:
+        db.session.rollback()
+        raise
+    finally:
+        db.session.close()
 
     return r
 
