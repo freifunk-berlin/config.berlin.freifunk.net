@@ -1,0 +1,30 @@
+Hey,
+
+für deinen Freifunk Router '{{request.hostname}}' gibts folgende Konfiguration:
+
+Firmware - {{request.router.name}}:
+{% for name,url in request.router.firmwares.items()%}* {{name}} [{{loop.index}}]
+{% endfor %}
+
+Mesh-IPs:
+{% for ip in request.ips_pretty['mesh'] %} * {{ip}}
+{% endfor %}
+
+DHCP-Network:
+{% for ip in request.ips_pretty['hna'] %} {{ip}}
+{% endfor %}
+
+Am besten orientierst du dich an folgenden Anleitungen:
+
+  Flashen (Betriebsystem installieren):
+    - http://berlin.freifunk.net/participate/howto/flash
+
+  Konfigurieren:
+    - http://berlin.freifunk.net/participate/howto/config
+
+Grüße
+Freifunk Berlin
+
+
+{% for name,url in request.router.firmwares.items()%}[{{loop.index}}] {{url}}
+{% endfor %}

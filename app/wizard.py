@@ -21,14 +21,7 @@ def wizard_get_config(token):
     if not r.verified:
         raise Exception('Request has not been verified yet')
 
-    ips = {'mesh':[], 'hna':[]}
-    for ip in r.ips:
-        if ip.endswith('/32'):
-            ips['mesh'].append(ip.replace('/32', ''))
-        else:
-            ips['hna'].append(ip)
-
-    return render_template('show_config.html', ips=ips, router=r.router)
+    return render_template('show_config.html', ips=r.ips_pretty, router=r.router)
 
 
 @wizard.route('/')
@@ -59,7 +52,12 @@ def wizard_form(router_id):
 
         url = url_for(".wizard_activate", request_id=r.id,
                       signed_token=r.gen_signed_token(), _external=True)
-        send_email(r.email, r.hostname, r.router, url)
+        subject = "[Freifunk Berlin] Aktivierung - %s" % r.hostname
+        data = {
+            'hostname': r.hostname,
+            'router': r.router['name'], 'url': url
+        }
+        send_email(r.email, subject, "email_activation.txt", data)
         return redirect(url_for('.wizard_send_email'))
 
     router_db = current_app.config['ROUTER_DB']
@@ -70,6 +68,7 @@ def wizard_form(router_id):
 @wizard.route('/wizard/email_sent')
 def wizard_send_email():
     return render_template('waiting_for_confirmation.html')
+
 
 @wizard.route('/wizard/activate/<int:request_id>/<signed_token>')
 def wizard_activate(request_id, signed_token):
@@ -83,5 +82,8 @@ def wizard_activate(request_id, signed_token):
 
         db.session.add(r)
         db.session.commit()
+
+        subject = "[Freifunk Berlin] Konfiguration - %s" % r.hostname
+        send_email(r.email, subject, 'email_config.txt', {'request' : r})
 
     return redirect(url_for('.wizard_get_config', token = r.token))

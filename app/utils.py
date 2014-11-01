@@ -54,17 +54,11 @@ def gen_random_hash(length):
     return ''.join(choice(digits) for x in range(length))
 
 
-def send_email(email, hostname, router, url):
-    body = render_template('email.txt',
-        router = router['name'],
-        url = url
-    )
-
-    msg = Message("[Freifunk Berlin] Konfiguration - %s" % hostname,
-              sender=current_app.config['MAIL_FROM'],
-              recipients=[email],
-              body = body)
-    mail.send(msg)
+def send_email(recipient, subject, template, data):
+    body = render_template(template, **data)
+    msg = Message(subject, sender=current_app.config['MAIL_FROM'],
+              recipients=[recipient], body = body)
+    return mail.send(msg)
 
 def _get_firmwares_for_router(base_url, data):
     firmware_id = data['id']

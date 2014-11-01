@@ -43,6 +43,16 @@ class IPRequest(db.Model):
         return get_api().get_prefixes_for_id(self.id)
 
     @property
+    def ips_pretty(self):
+        ips = {'mesh':[], 'hna':[]}
+        for ip in self.ips:
+            if ip.endswith('/32'):
+                ips['mesh'].append(ip.replace('/32', ''))
+            else:
+                ips['hna'].append(ip)
+        return ips
+
+    @property
     def router(self):
         router_db = current_app.config['ROUTER_DB']
         base_url = current_app.config['FIRMWARE_BASE_URL']

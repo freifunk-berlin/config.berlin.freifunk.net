@@ -1,0 +1,15 @@
+Hey,
+
+es scheint als würdest du bei Freifunk Berlin mitmachen. Du hast eine
+Konfiguration für den Router '{{router}}' beantragt.
+Klicke bitte auf folgenden Link um die Konfiguration freizuschalten:
+
+  {{url}}
+
+Wenn du unabsichtlich oder jmd anders die Konfiguration auf deine
+Emailadresse beantragt hat, dann ignoriere diese Mail und der Antrag
+wird in 48 Stunden automatisch gelöscht.
+
+Grüße
+Freifunk Berlin
+
