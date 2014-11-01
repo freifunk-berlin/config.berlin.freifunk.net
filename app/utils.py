@@ -33,8 +33,8 @@ def wizard_form_process(router_id, email, hostname, prefix_len):
         db.session.add(r)
         db.session.commit()
 
-        # allocate mesh IPs
-        ip_mesh_num = 2 if r.router['dualband'] else 1
+        # allocate mesh IPs - Lan + Wifi
+        ip_mesh_num = 3 if r.router['dualband'] else 2
         get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
             r.hostname, ip_mesh_num)
 
