@@ -4,6 +4,7 @@ from flask import Flask, render_template
 from .wizard import wizard
 from .exts import db, mail, migrate
 from .wizard import wizard
+from .expert import expert
 
 def create_app(config=None):
     """Creates the Flask app."""
@@ -13,7 +14,7 @@ def create_app(config=None):
     configure_extensions(app)
     configure_error_handlers(app)
 
-    for blueprint in [wizard]:
+    for blueprint in [wizard, expert]:
         app.register_blueprint(blueprint)
 
     return app
