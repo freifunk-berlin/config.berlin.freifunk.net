@@ -1,6 +1,6 @@
 Hey,
 
-für deinen Freifunk Router '{{request.hostname}}' gibts folgende Konfiguration:
+für deinen Freifunk Router '{{request.name}}' gibts folgende Konfiguration:
 
 Firmware - {{request.router.name}}:
 {% for name,url in request.router.firmwares.items()%} * {{name}} [{{loop.index}}]

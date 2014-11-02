@@ -1,8 +1,7 @@
 Hey,
 
-es scheint als würdest du bei Freifunk Berlin mitmachen. Du hast eine
-Konfiguration für den Router '{{router}}' beantragt.
-Klicke bitte auf folgenden Link um die Konfiguration freizuschalten:
+es scheint als würdest du bei Freifunk Berlin mitmachen. Klicke bitte
+auf folgenden Link um die Konfiguration freizuschalten:
 
   {{url}}
 

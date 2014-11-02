@@ -15,14 +15,14 @@ from .wizard import get_api
 class IPRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120))
-    hostname = db.Column(db.String(120), unique=True)
+    name = db.Column(db.String(120), unique=True)
     router_id = db.Column(db.String(120))
     verified = db.Column(db.Boolean(), default=False)
     token  = db.Column(db.String(128), unique=True)
     created_at = db.Column(db.DateTime(), default=datetime.now)
 
-    def __init__(self, hostname, email, router_id):
-        self.hostname = hostname
+    def __init__(self, name, email, router_id):
+        self.name = name
         self.email = email
         self.router_id = router_id
         self.token = gen_random_hash(32)
@@ -50,12 +50,12 @@ class IPRequest(db.Model):
 
     def _verify(self, signed_token, salt, timeout = None):
         serializer = URLSafeTimedSerializer(self.token, salt)
-        return self.hostname == serializer.loads(signed_token, max_age=timeout)
+        return self.name == serializer.loads(signed_token, max_age=timeout)
 
 
     def _gen_signed_token(self, salt):
         serializer = URLSafeTimedSerializer(self.token, salt)
-        return serializer.dumps(self.hostname)
+        return serializer.dumps(self.name)
 
 
     @property
@@ -104,7 +104,7 @@ class EmailForm(Form):
 
     @validates('hostname')
     def validate_hostname(self, field):
-        r = IPRequest.query.filter_by(hostname=field.data).count()
+        r = IPRequest.query.filter_by(name=field.data).count()
         if r > 0:
             raise ValueError(u'Standortname bereits vergeben.')
         return field
@@ -117,6 +117,21 @@ class DestroyForm(Form):
     @validates('email')
     def validate_email(self, field):
         r = IPRequest.query.get(self.request_id.data)
+        if r is None:
+            raise ValueError(u'Ungültige Anfrage')
+
         if field.data != r.email:
             raise ValueError(u'Email stimmt nicht überein.')
+        return field
+
+class ExpertForm(Form):
+    email = StringField('Email', validators=[Email()])
+    name = StringField('Name', validators=[Length(4,32)])
+    captcha = StringField('Captcha', validators=[v])
+
+    @validates('name')
+    def validate_name(self, field):
+        r = IPRequest.query.filter_by(name=field.data).count()
+        if r > 0:
+            raise ValueError(u'Name bereits vergeben.')
         return field

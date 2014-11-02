@@ -1,0 +1,15 @@
+Hey,
+
+du hast folgende IPs bekommen:
+
+Mesh-IPs:
+{% for ip in request.ips %} * {{ip}}
+{% endfor %}
+
+Wenn du die IP-Adressen nicht mehr brauchst kannst du sie folgendem Link
+löschen:
+
+{{url}}
+
+Grüße
+Freifunk Berlin

@@ -21,7 +21,7 @@ def get_api():
     return api
 
 
-def wizard_form_process(router_id, hostname, email, prefix_len):
+def form_process(name, email, prefix_len, router_id = None):
     """Process the data gathered from the input form, by performing all steps
        needed to assign enough ips for the router model of the user. """
 
@@ -29,18 +29,22 @@ def wizard_form_process(router_id, hostname, email, prefix_len):
     try:
         # add new request to database
         router_db = current_app.config['ROUTER_DB']
-        r = IPRequest(hostname, email, router_id)
+        r = IPRequest(name, email, router_id)
         db.session.add(r)
         db.session.commit()
 
-        # allocate mesh IPs - Lan + Wifi
-        ip_mesh_num = 3 if r.router['dualband'] else 2
-        get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
-            r.hostname, ip_mesh_num)
+        if router_id is not None:
+            # allocate mesh IPs - Lan + Wifi
+            ip_mesh_num = 3 if r.router['dualband'] else 2
+            get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
+                r.name, ip_mesh_num)
 
-        # allocate HNA network
-        get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
-            r.hostname, prefix_len = prefix_len)
+            # allocate HNA network
+            get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
+                r.name, prefix_len = prefix_len)
+        else:
+            get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
+                r.name, prefix_len = prefix_len)
     except:
         db.session.rollback()
         raise
