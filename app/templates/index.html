@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+      <div class="row">
+        <h2 class="col-md-12">Wie kann ich mitmachen?</h2>
+        <p class="col-md-12">
+        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+        </p>
+
+        <p class="col-md-12 text-center">
+          <a class="button" href="{{url_for('wizard.wizard_select_router')}}">
+            Konfiguration
+          </a>
+
+          <a class="button" href="{{url_for('expert.expert_form')}}">
+            Expertenmodus
+          </a>
+        </p>
+
+        <div class="col-md-12 text-center">
+          <iframe src="//player.vimeo.com/video/64814620?portrait=0&title=0&byline=0"
+                  width="500" height="281" frameborder="0"
+                  webkitallowfullscreen mozallowfullscreen allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+{% endblock %}

@@ -24,7 +24,8 @@ def wizard_get_config(token):
     return render_template('wizard/show_config.html', ips=r.ips_pretty, router=r.router)
 
 
-@wizard.route('/')
+
+@wizard.route('/wizard/routers')
 @wizard.route('/wizard/routers/<path:router_id>')
 def wizard_select_router(router_id = None):
     router_db = current_app.config['ROUTER_DB']
@@ -58,7 +59,7 @@ def wizard_form(router_id):
             'name': r.name,
             'router': r.router['name'], 'url': url
         }
-        send_email(r.email, subject, "wizard/email_activation.txt", data)
+        send_email(r.email, subject, "activation.txt", data)
         return render_template('waiting_for_confirmation.html')
 
     router_db = current_app.config['ROUTER_DB']
