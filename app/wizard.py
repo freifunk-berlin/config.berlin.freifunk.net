@@ -8,7 +8,7 @@ from flask import Blueprint, render_template, redirect, url_for, current_app,\
 from wtforms import SelectField
 from .utils import wizard_form_process, send_email, get_api,\
                    router_db_get_entry, router_db_has_entry, router_db_list
-from .models import IPRequest, EmailForm
+from .models import IPRequest, EmailForm, DestroyForm
 from .exts import db
 
 
@@ -46,12 +46,12 @@ def wizard_form(router_id):
     if form.validate_on_submit():
         r = wizard_form_process(
             router_id,
-            form.email.data,
             form.hostname.data,
+            form.email.data,
             prefix_defaults[form.location_type.data])
 
         url = url_for(".wizard_activate", request_id=r.id,
-                      signed_token=r.gen_signed_token(), _external=True)
+                      signed_token=r.token_activation, _external=True)
         subject = "[Freifunk Berlin] Aktivierung - %s" % r.hostname
         data = {
             'hostname': r.hostname,
@@ -74,16 +74,23 @@ def wizard_send_email():
 def wizard_activate(request_id, signed_token):
     r = IPRequest.query.get(request_id)
     if not r.verified:
-        if not r.verify_signed_token(signed_token, timeout = 3600):
-            raise Exception("Invalid Token")
-
-        get_api().activate_ips(r.id)
-        r.verified = True
-
-        db.session.add(r)
-        db.session.commit()
-
+        r.activate(signed_token)
+        url = url_for(".wizard_destroy", request_id=r.id,
+                      signed_token=r.token_destroy, _external=True)
         subject = "[Freifunk Berlin] Konfiguration - %s" % r.hostname
-        send_email(r.email, subject, 'email_config.txt', {'request' : r})
+        send_email(r.email, subject, 'email_config.txt', {'request' : r,
+            'url':url})
 
     return redirect(url_for('.wizard_get_config', token = r.token))
+
+
+@wizard.route('/wizard/destroy/<int:request_id>/<signed_token>', methods=['GET', 'POST'])
+def wizard_destroy(request_id, signed_token):
+    form = DestroyForm(request_id=request_id, token=signed_token)
+    r = IPRequest.query.get(request_id)
+    if form.validate_on_submit():
+        r.destroy(form.token.data)
+        return render_template('destroy_success.html', hostname = r.hostname)
+
+    url = url_for('.wizard_destroy', request_id = r.id, signed_token = signed_token)
+    return render_template('destroy_form.html', request = r, form = form, url =  url)

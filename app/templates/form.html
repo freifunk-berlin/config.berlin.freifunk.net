@@ -1,31 +1,4 @@
-{% macro render_bootstrap_field(field, placeholder, help) %}
-
-<div class="form-group {% if field.errors %} error {% endif %}">
-    <label class="col-md-2 control-label">{{ field.label }}</label>
-    <div class="col-md-10">
-        {{ field(class='form-control', placeholder=placeholder)|safe }}
-        {% if field.errors %}
-            {% for error in field.errors %}
-                <span class="errors">{{ error }}</span><br>
-            {% endfor %}
-        {% endif %}
-        <span class="help-block italic">{{ help|safe }}</span>
-    </div>
-</div>
-{% endmacro %}
-
-{% macro render_bootstrap_checkbox(field, description) -%}
-<div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
-    <div class="checkbox">
-        <label>
-            {{ field(type='checkbox', **kwargs) }} {{ field.label }}
-        </label>
-    </div>
-    <span class="help-block italic">{{ description|safe }}</span>
-</div>
-{%- endmacro %}
-
+{% from '_utils.html' import render_bootstrap_field %}
 {% extends "layout.html" %}
 {% block body %}
       <div class="row">

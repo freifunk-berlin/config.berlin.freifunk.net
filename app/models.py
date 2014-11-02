@@ -5,7 +5,7 @@ from flask import current_app
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 from flask_wtf import Form
-from wtforms import StringField
+from wtforms import StringField, HiddenField
 from wtforms.validators import Email, AnyOf, Length
 from itsdangerous import URLSafeTimedSerializer
 from .exts import db
@@ -28,19 +28,50 @@ class IPRequest(db.Model):
         self.token = gen_random_hash(32)
 
 
-    def verify_signed_token(self, signed_token, timeout = 3600):
-        secret = current_app.config['SECRET_KEY']
-        serializer = URLSafeTimedSerializer(secret, " ".join(self.ips))
-        return self.token == serializer.loads(signed_token, max_age=timeout)
+    def activate(self, signed_token, timeout = 3600):
+        if not self._verify(signed_token, 'activation', timeout):
+            raise Exception("Invalid Token")
 
-    def gen_signed_token(self):
-        secret = current_app.config['SECRET_KEY']
-        serializer = URLSafeTimedSerializer(secret, " ".join(self.ips))
-        return serializer.dumps(self.token)
+        get_api().activate_ips(self.id)
+        self.verified = True
+
+        db.session.add(self)
+        db.session.commit()
+
+
+    def destroy(self, signed_token):
+        if not self._verify(signed_token, 'destroy'):
+            raise Exception("Invalid Token")
+
+        get_api().delete_prefixes_by_id(self.id)
+        db.session.delete(self)
+        db.session.commit()
+
+
+    def _verify(self, signed_token, salt, timeout = None):
+        serializer = URLSafeTimedSerializer(self.token, salt)
+        return self.hostname == serializer.loads(signed_token, max_age=timeout)
+
+
+    def _gen_signed_token(self, salt):
+        serializer = URLSafeTimedSerializer(self.token, salt)
+        return serializer.dumps(self.hostname)
+
+
+    @property
+    def token_activation(self):
+        return self._gen_signed_token('activation')
+
+
+    @property
+    def token_destroy(self):
+        return self._gen_signed_token('destroy')
+
 
     @property
     def ips(self):
         return get_api().get_prefixes_for_id(self.id)
+
 
     @property
     def ips_pretty(self):
@@ -52,11 +83,13 @@ class IPRequest(db.Model):
                 ips['hna'].append(ip)
         return ips
 
+
     @property
     def router(self):
         router_db = current_app.config['ROUTER_DB']
         base_url = current_app.config['FIRMWARE_BASE_URL']
         return router_db_get_entry(router_db, self.router_id, base_url)
+
 
     def __repr__(self):
         return '<IPRequest %r>' % self.email
@@ -73,5 +106,17 @@ class EmailForm(Form):
     def validate_hostname(self, field):
         r = IPRequest.query.filter_by(hostname=field.data).count()
         if r > 0:
-            raise ValueError('Standortname bereits vergeben.')
+            raise ValueError(u'Standortname bereits vergeben.')
+        return field
+
+class DestroyForm(Form):
+    email = StringField('Email', validators=[Email()])
+    request_id = HiddenField('request_id')
+    token = HiddenField('token')
+
+    @validates('email')
+    def validate_email(self, field):
+        r = IPRequest.query.get(self.request_id.data)
+        if field.data != r.email:
+            raise ValueError(u'Email stimmt nicht überein.')
         return field

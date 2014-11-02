@@ -21,7 +21,7 @@ def get_api():
     return api
 
 
-def wizard_form_process(router_id, email, hostname, prefix_len):
+def wizard_form_process(router_id, hostname, email, prefix_len):
     """Process the data gathered from the input form, by performing all steps
        needed to assign enough ips for the router model of the user. """
 

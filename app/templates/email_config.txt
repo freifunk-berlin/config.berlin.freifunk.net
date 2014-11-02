@@ -3,7 +3,7 @@ Hey,
 für deinen Freifunk Router '{{request.hostname}}' gibts folgende Konfiguration:
 
 Firmware - {{request.router.name}}:
-{% for name,url in request.router.firmwares.items()%}* {{name}} [{{loop.index}}]
+{% for name,url in request.router.firmwares.items()%} * {{name}} [{{loop.index}}]
 {% endfor %}
 
 Mesh-IPs:
@@ -21,6 +21,11 @@ Am besten orientierst du dich an folgenden Anleitungen:
 
   Konfigurieren:
     - http://berlin.freifunk.net/participate/howto/config
+
+Wenn du die IP-Adressen nicht mehr brauchst kannst du sie folgendem Link
+löschen:
+
+{{url}}
 
 Grüße
 Freifunk Berlin
