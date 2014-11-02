@@ -41,7 +41,7 @@ def expert_activate(request_id, signed_token):
 @expert.route('/expert/form', methods=['GET', 'POST'])
 def expert_form():
     prefix_max  = current_app.config['EXPERT_MAX_PREFIX']
-    prefixes = range(prefix_max, 33)
+    prefixes = range(32, prefix_max-1, -1)
     choices = [(str(k),k) for k in prefixes]
     setattr(ExpertForm, 'prefix', SelectField(u'Präfix', choices=choices))
 
