@@ -5,6 +5,7 @@ import re
 from itertools import chain
 from flask import Blueprint, render_template, redirect, url_for, current_app,\
                   request, g
+from werkzeug.exceptions import BadRequest
 from wtforms import SelectField
 from .utils import form_process, send_email, get_api,\
                    router_db_get_entry, router_db_has_entry, router_db_list
@@ -19,7 +20,7 @@ wizard = Blueprint('wizard', __name__)
 def wizard_get_config(request_id, signed_token):
     r = IPRequest.query.get(request_id)
     if r.viewable(signed_token) or not r.verified:
-        raise Exception('Request has not been verified yet')
+        raise BadRequest(u"Eintrag wurde bisher noch nicht aktiviert!")
 
     return render_template('wizard/show_config.html', ips=r.ips_pretty, router=r.router)
 
@@ -69,6 +70,9 @@ def wizard_form(router_id):
 @wizard.route('/wizard/activate/<int:request_id>/<signed_token>')
 def wizard_activate(request_id, signed_token):
     r = IPRequest.query.get(request_id)
+    if r is None:
+        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
+
     if not r.verified:
         r.activate(signed_token)
         url = url_for(".wizard_destroy", request_id=r.id,
@@ -82,8 +86,11 @@ def wizard_activate(request_id, signed_token):
 
 @wizard.route('/wizard/destroy/<int:request_id>/<signed_token>', methods=['GET', 'POST'])
 def wizard_destroy(request_id, signed_token):
-    form = DestroyForm(request_id=request_id, token=signed_token)
     r = IPRequest.query.get(request_id)
+    if r is None:
+        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
+
+    form = DestroyForm(request_id=request_id, token=signed_token)
     if form.validate_on_submit():
         r.destroy(form.token.data)
         return render_template('wizard/destroy_success.html', name = r.name)

@@ -3,6 +3,7 @@
 from wtforms import SelectField
 from flask import Blueprint, render_template, redirect, url_for, current_app,\
                   request, flash
+from werkzeug.exceptions import BadRequest
 from .models import IPRequest, ExpertForm, DestroyForm
 from .utils import form_process, send_email
 
@@ -12,8 +13,11 @@ expert = Blueprint('expert', __name__)
 
 @expert.route('/expert/destroy/<int:request_id>/<signed_token>', methods=['GET', 'POST'])
 def expert_destroy(request_id, signed_token):
-    form = DestroyForm(request_id=request_id, token=signed_token)
     r = IPRequest.query.get(request_id)
+    if r is None:
+        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
+
+    form = DestroyForm(request_id=request_id, token=signed_token)
     if form.validate_on_submit():
         r.destroy(form.token.data)
         flash(u'Adressen erfolgreich gelöscht!')
@@ -26,6 +30,9 @@ def expert_destroy(request_id, signed_token):
 @expert.route('/expert/activate/<int:request_id>/<signed_token>')
 def expert_activate(request_id, signed_token):
     r = IPRequest.query.get(request_id)
+    if r is None:
+        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
+
     if not r.verified:
         r.activate(signed_token)
         url = url_for(".expert_destroy", request_id=r.id,

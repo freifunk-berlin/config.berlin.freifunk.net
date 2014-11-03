@@ -50,6 +50,7 @@ def configure_extensions(app):
 
 
 def configure_error_handlers(app):
+    @app.errorhandler(400)
     @app.errorhandler(403)
     @app.errorhandler(404)
     def errorhandler(e):
