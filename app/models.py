@@ -38,6 +38,10 @@ class IPRequest(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def viewable(self, signed_token):
+        if not self._verify(signed_token, 'config'):
+            raise Exception("Invalid Token")
+
 
     def destroy(self, signed_token):
         if not self._verify(signed_token, 'destroy'):
@@ -61,6 +65,10 @@ class IPRequest(db.Model):
     @property
     def token_activation(self):
         return self._gen_signed_token('activation')
+
+    @property
+    def token_config(self):
+        return self._gen_signed_token('config')
 
 
     @property

@@ -15,10 +15,10 @@ from .exts import db
 wizard = Blueprint('wizard', __name__)
 
 
-@wizard.route('/wizard/config/<token>')
-def wizard_get_config(token):
-    r = IPRequest.query.filter_by(token=token).one()
-    if not r.verified:
+@wizard.route('/wizard/config/<int:request_id>/<signed_token>')
+def wizard_get_config(request_id, signed_token):
+    r = IPRequest.query.get(request_id)
+    if r.viewable(signed_token) or not r.verified:
         raise Exception('Request has not been verified yet')
 
     return render_template('wizard/show_config.html', ips=r.ips_pretty, router=r.router)
@@ -77,7 +77,7 @@ def wizard_activate(request_id, signed_token):
         send_email(r.email, subject, 'wizard/email_config.txt', {'request' : r,
             'url':url})
 
-    return redirect(url_for('.wizard_get_config', token = r.token))
+    return redirect(url_for('.wizard_get_config', request_id=r.id, token = r.token_config))
 
 
 @wizard.route('/wizard/destroy/<int:request_id>/<signed_token>', methods=['GET', 'POST'])
