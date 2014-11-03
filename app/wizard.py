@@ -77,7 +77,7 @@ def wizard_activate(request_id, signed_token):
         send_email(r.email, subject, 'wizard/email_config.txt', {'request' : r,
             'url':url})
 
-    return redirect(url_for('.wizard_get_config', request_id=r.id, token = r.token_config))
+    return redirect(url_for('.wizard_get_config', request_id=r.id, signed_token = r.token_config))
 
 
 @wizard.route('/wizard/destroy/<int:request_id>/<signed_token>', methods=['GET', 'POST'])
