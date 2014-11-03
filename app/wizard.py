@@ -19,7 +19,9 @@ wizard = Blueprint('wizard', __name__)
 @wizard.route('/wizard/config/<int:request_id>/<signed_token>')
 def wizard_get_config(request_id, signed_token):
     r = IPRequest.query.get(request_id)
-    if r.viewable(signed_token) or not r.verified:
+    if r is None:
+        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
+    elif r.viewable(signed_token) or not r.verified:
         raise BadRequest(u"Eintrag wurde bisher noch nicht aktiviert!")
 
     return render_template('wizard/show_config.html', ips=r.ips_pretty, router=r.router)
