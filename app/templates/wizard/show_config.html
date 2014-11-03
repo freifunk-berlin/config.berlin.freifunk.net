@@ -10,15 +10,17 @@
 
         <div class="col-md-12">
           <dl class="dl-horizontal col-md-8">
-            <dt>Router</dt>
-            <dd>{{router.name}}</dd>
+            {% if router %}
+              <dt>Router</dt>
+              <dd>{{router.name}}</dd>
 
-            <dt>Firmware</dt>
-            <dd>
-            {% for name,url in router.firmwares.items() %}
-            <a href="{{url}}">{{name}}.bin</a>
-            {% endfor %}
-            </dd>
+              <dt>Firmware</dt>
+              <dd>
+              {% for name,url in router.firmwares.items() %}
+              <a href="{{url}}">{{name}}.bin</a>
+              {% endfor %}
+              </dd>
+            {% endif %}
 
             <dt>Mesh-IPs</dt>
             <dd>
@@ -34,10 +36,13 @@
             {% endfor %}
             </dd>
           </dl>
+
+          {% if router %}
           <p class="col-md-4 form-router text-center">
             <img src="{{url_for('static', filename=router.img)}}" alt="{{router.name}}" />
             {{router.name}}
           </p>
+          {% endif %}
         </div>
       </div>
 
