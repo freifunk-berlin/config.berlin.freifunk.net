@@ -7,9 +7,9 @@ from flask import Blueprint, render_template, redirect, url_for, current_app,\
                   request, g
 from werkzeug.exceptions import BadRequest
 from wtforms import SelectField
-from .utils import form_process, send_email, get_api,\
+from .utils import request_create, send_email, get_api,\
                    router_db_get_entry, router_db_has_entry, router_db_list
-from .models import IPRequest, EmailForm, DestroyForm
+from .models import IPRequest, EmailForm, DestroyForm, ip_request_get
 from .exts import db
 
 
@@ -18,10 +18,8 @@ wizard = Blueprint('wizard', __name__)
 
 @wizard.route('/wizard/config/<int:request_id>/<signed_token>')
 def wizard_get_config(request_id, signed_token):
-    r = IPRequest.query.get(request_id)
-    if r is None:
-        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
-    elif r.viewable(signed_token) or not r.verified:
+    r = ip_request_get(request_id)
+    if r.viewable(signed_token) or not r.verified:
         raise BadRequest(u"Eintrag wurde bisher noch nicht aktiviert!")
 
     return render_template('wizard/show_config.html', ips=r.ips_pretty, router=r.router)
@@ -40,6 +38,9 @@ def wizard_select_router(router_id = None):
 
 @wizard.route('/wizard/forms/<path:router_id>', methods=['GET', 'POST'])
 def wizard_form(router_id):
+    router_db = current_app.config['ROUTER_DB']
+    router = router_db_get_entry(router_db, router_id)
+
     # add location type field dynamically (values are set in config)
     prefix_defaults = current_app.config['PREFIX_DEFAULTS']
     choices = [(k,k) for k in prefix_defaults.keys()]
@@ -47,34 +48,38 @@ def wizard_form(router_id):
 
     form = EmailForm()
     if form.validate_on_submit():
-        r = form_process(
-            form.hostname.data,
-            form.email.data,
-            prefix_defaults[form.location_type.data],
-            router_id = router_id,
-            )
+        # mesh ips - 3 for dualband (2x wifi + 1x lan) else 2
+        mesh_num = 3 if router['dualband'] else 2
+        pool_mesh = current_app.config['API_POOL_MESH']
+        prefixes_mesh = [(pool_mesh, 32)]*mesh_num
 
-        url = url_for(".wizard_activate", request_id=r.id,
-                      signed_token=r.token_activation, _external=True)
-        subject = "[Freifunk Berlin] Aktivierung - %s" % r.name
-        data = {
-            'name': r.name,
-            'router': r.router['name'], 'url': url
-        }
-        send_email(r.email, subject, "activation.txt", data)
+        # hna network
+        pool_hna = current_app.config['API_POOL_HNA']
+        prefixes_hna = [(pool_hna, prefix_defaults[form.location_type.data])]
+
+        r = request_create(form.hostname.data, form.email.data,
+                prefixes_mesh + prefixes_hna, [], router_id = router_id)
+
+        try:
+            url = url_for(".wizard_activate", request_id=r.id,
+                          signed_token=r.token_activation, _external=True)
+            subject = "[Freifunk Berlin] Aktivierung - %s" % r.name
+            data = { 'name': r.name, 'router': r.router['name'], 'url': url }
+            send_email(r.email, subject, "activation.txt", data)
+        except:
+            # if send_mail fails we delete the already saved request
+            db.session.delete(r)
+            db.session.commit()
+            raise
+
         return render_template('confirmation.html')
 
-    router_db = current_app.config['ROUTER_DB']
-    router = router_db_get_entry(router_db, router_id)
     return render_template('wizard/form.html', form = form, router = router)
 
 
 @wizard.route('/wizard/activate/<int:request_id>/<signed_token>')
 def wizard_activate(request_id, signed_token):
-    r = IPRequest.query.get(request_id)
-    if r is None:
-        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
-
+    r = ip_request_get(request_id)
     if not r.verified:
         r.activate(signed_token)
         url = url_for(".wizard_destroy", request_id=r.id,
@@ -88,10 +93,7 @@ def wizard_activate(request_id, signed_token):
 
 @wizard.route('/wizard/destroy/<int:request_id>/<signed_token>', methods=['GET', 'POST'])
 def wizard_destroy(request_id, signed_token):
-    r = IPRequest.query.get(request_id)
-    if r is None:
-        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
-
+    r = ip_request_get(request_id)
     form = DestroyForm(request_id=request_id, token=signed_token)
     if form.validate_on_submit():
         r.destroy(form.token.data)

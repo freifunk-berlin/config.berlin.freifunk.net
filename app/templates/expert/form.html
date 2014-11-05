@@ -1,4 +1,4 @@
-{% from '_utils.html' import render_bootstrap_field %}
+{% from '_utils.html' import render_bootstrap_field, render_bootstrap_checkbox %}
 {% extends "_layout.html" %}
 {% block body %}
       <div class="row">
@@ -31,10 +31,17 @@
           <form class="form-horizontal col-md-12" role="form" action="" method="post">
 
             {{ form.csrf_token }}
+
+            <h3 class="col-md-12 text-center">Allgemein</h3>
             {{ render_bootstrap_field(form.name, "ID", "Eindeutige ID für deine Anfrage zum Beispiel Standortname") }}
             {{ render_bootstrap_field(form.email, "Kontaktadresse", "Notwendig, damit wir dir eine Aktivierungsmail schicken können.")}}
-            {{ render_bootstrap_field(form.prefix, help="Netzwerkpräfix den du anfordern willst!") }}
             {{ render_bootstrap_field(form.captcha, "Hauptstadt Deutschlands?", "Wird benötigt um Spam-Bots auszuschließen.") }}
+
+            <h3 class="col-md-12 text-center">IPv4</h3>
+            {{ render_bootstrap_field(form.ipv4_prefix, help="IPv4-Netzwerkpräfix den du anfordern willst!") }}
+
+            <h3 class="col-md-12 text-center">IPv6</h3>
+            {{ render_bootstrap_field(form.ipv6_pool, help="pro Standort wird ein <b>/60</b>-Präfix vergeben. Die Präfixe selbst sind ortsbezogen je nach Wahlkreis.") }}
 
             <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">

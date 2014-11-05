@@ -88,14 +88,14 @@ class NipapApi:
     def list_all_prefixes(self):
         return pynipap.Prefix.list()
 
-    def _create_prefix(self, pool, prefix_type, prefix_len = None, data = {}):
+    def _create_prefix(self, pool, prefix_type, family = 4, prefix_len = None, data = {}):
         prefix = pynipap.Prefix()
         prefix.vrf = self.vrf
         prefix.type = prefix_type
         for k,v in data.items():
             setattr(prefix, k, v)
 
-        args = {'from-pool': pool, 'family': 4}
+        args = {'from-pool': pool, 'family': family}
         if prefix_len is not None:
             args['prefix_length'] = prefix_len
 
@@ -103,7 +103,7 @@ class NipapApi:
 
         return prefix
 
-    def create_prefix_from_pool(self, pool_name, prefix_type = 'assignment', prefix_len = None, data = {}):
+    def create_prefix_from_pool(self, pool_name, prefix_type = 'assignment', prefix_len = None, family = 4, data = {}):
         """Creates a prefix from a given pool. You can specify prefix_len if
            you do not want to us default prefix_len of that pool. Additional
            data can be added with data (as a dict). Only the following
@@ -115,24 +115,19 @@ class NipapApi:
         if pool is None:
             raise Exception("Pool '%s' does not exist" % pool_name)
 
-        prefix = self._create_prefix(pool, prefix_type, prefix_len, data=data)
+        prefix = self._create_prefix(pool, prefix_type, family, prefix_len, data=data)
 
         return prefix.prefix
 
-    def allocate_ips(self, pool, request_id, email, hostname, num = 1, prefix_len = None, prefix_type='reservation'):
+    def allocate_ips(self, pool, request_id, email, hostname, prefix_len = None, family = 4, prefix_type='reservation'):
         data = {
             'tags': [self.app_id],
             'description' : hostname,
             'customer_id' : email,
             'external_key' : request_id
         }
-        ips = []
-        for i in range(num):
-            p = self.create_prefix_from_pool(pool, prefix_type, prefix_len,
-                    data=data)
-            ips.append(p)
-
-        return ips
+        return self.create_prefix_from_pool(pool, prefix_type, prefix_len,
+                family, data=data)
 
     def activate_ips(self, request_id):
         for p in self.get_prefixes_by_external_key(request_id):

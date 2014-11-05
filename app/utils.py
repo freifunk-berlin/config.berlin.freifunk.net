@@ -21,30 +21,26 @@ def get_api():
     return api
 
 
-def form_process(name, email, prefix_len, router_id = None):
+def request_create(name, email, prefixes_v4, prefixes_v6, router_id = None):
     """Process the data gathered from the input form, by performing all steps
        needed to assign enough ips for the router model of the user. """
 
     from .models import db, IPRequest
     try:
         # add new request to database
-        router_db = current_app.config['ROUTER_DB']
         r = IPRequest(name, email, router_id)
         db.session.add(r)
         db.session.commit()
 
-        if router_id is not None:
-            # allocate mesh IPs - Lan + Wifi
-            ip_mesh_num = 3 if r.router['dualband'] else 2
-            get_api().allocate_ips(current_app.config['API_POOL_MESH'], r.id, r.email,
-                r.name, ip_mesh_num)
+        # allocate IPs in NIPAP
+        if prefixes_v4:
+            for (pool, prefix_len) in prefixes_v4:
+                get_api().allocate_ips(pool, r.id, r.email, name, prefix_len, 4)
 
-            # allocate HNA network
-            get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
-                r.name, prefix_len = prefix_len)
-        else:
-            get_api().allocate_ips(current_app.config['API_POOL_HNA'], r.id, r.email,
-                r.name, prefix_len = prefix_len)
+        if prefixes_v6:
+            for (pool, prefix_len) in prefixes_v6:
+                get_api().allocate_ips(pool, r.id, r.email, name, prefix_len, 6)
+
     except:
         db.session.rollback()
         raise
@@ -53,9 +49,11 @@ def form_process(name, email, prefix_len, router_id = None):
 
     return r
 
+
 def gen_random_hash(length):
     digits = string.ascii_letters + string.digits
     return ''.join(choice(digits) for x in range(length))
+
 
 
 def send_email(recipient, subject, template, data):
@@ -64,6 +62,7 @@ def send_email(recipient, subject, template, data):
               recipients=[recipient], body = body)
     return mail.send(msg)
 
+
 def _get_firmwares_for_router(base_url, data):
     firmware_id = data['id']
     if 'firmware_no_suffix' in data and data['firmware_no_suffix']:
@@ -71,6 +70,7 @@ def _get_firmwares_for_router(base_url, data):
 
     prefix =  "%s/openwrt-%s-%s" % (data['target'], '-'.join(firmware_id), data['fs'])
     return dict([(x, "%s/%s-%s.bin" % (base_url, prefix, x)) for x in ['sysupgrade', 'factory']])
+
 
 def router_db_get_entry(router_db, router_id, base_url = None):
     if router_id is None:
@@ -93,11 +93,13 @@ def router_db_get_entry(router_db, router_id, base_url = None):
 
     return data
 
+
 def router_db_has_entry(router_db, router_id):
     try:
         return router_db_get_entry(router_db, router_id)
     except KeyError:
         return False
+
 
 def router_db_list(router_db):
     for target, subtargets  in sorted(router_db['entries'].items()):

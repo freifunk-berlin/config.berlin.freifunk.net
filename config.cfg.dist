@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 DEBUG = False
 
 LOG_FILE_PATH='/var/log/nipap-wizard'
@@ -14,3 +16,4 @@ API_HOST = 'NIPAP_XML_RPC_URI'
 API_POOL_MESH = 'NAME_OF_MESH_POOL'
 API_POOL_HNA = 'NAME_OF_HNA_POOL'
 API_POOL_HNA = 'NAME_OF_LEGACY_POOL'
+API_POOL_IPV6 = ['POOL_1', 'POOL_2']
