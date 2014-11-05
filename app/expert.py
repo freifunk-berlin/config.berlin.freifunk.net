@@ -52,8 +52,12 @@ def expert_form():
 
     form = ExpertForm()
     if form.validate_on_submit():
-        prefixes_v4 = [(current_app.config['API_POOL_HNA'], int(form.ipv4_prefix.data))]
-        prefixes_v6 = [(form.ipv6_pool.data, None)]
+        prefixes_v4 = [(current_app.config['API_POOL_HNA'], int(form.ipv4_prefix.data))] \
+            if form.ipv4_prefix.data else []
+
+        prefixes_v6 = [(form.ipv6_pool.data, None)] \
+            if form.ipv6_pool.data else []
+
         r = request_create(form.name.data, form.email.data, prefixes_v4,
                 prefixes_v6)
 
