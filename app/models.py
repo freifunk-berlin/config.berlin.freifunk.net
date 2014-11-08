@@ -3,6 +3,7 @@
 from datetime import datetime
 from flask import current_app
 from flask.ext.sqlalchemy import SQLAlchemy
+from werkzeug.exceptions import BadRequest
 from sqlalchemy.orm import validates
 from flask_wtf import Form
 from wtforms import StringField, HiddenField, SelectField, BooleanField
@@ -30,7 +31,7 @@ class IPRequest(db.Model):
 
     def activate(self, signed_token, timeout = 3600):
         if not self._verify(signed_token, 'activation', timeout):
-            raise Exception("Invalid Token")
+            raise BadRequest(u"Dein Token ist ungültig oder bereits abgelaufen")
 
         get_api().activate_ips(self.id)
         self.verified = True
@@ -40,12 +41,12 @@ class IPRequest(db.Model):
 
     def viewable(self, signed_token):
         if not self._verify(signed_token, 'config'):
-            raise Exception("Invalid Token")
+            raise BadRequest(u"Dein Token ist ungültig")
 
 
     def destroy(self, signed_token):
         if not self._verify(signed_token, 'destroy'):
-            raise Exception("Invalid Token")
+            raise BadRequest(u"Dein Token ist ungültig!")
 
         get_api().delete_prefixes_by_id(self.id)
         db.session.delete(self)
