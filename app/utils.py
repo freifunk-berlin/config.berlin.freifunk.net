@@ -56,8 +56,8 @@ def gen_random_hash(length):
 
 
 
-def send_email(recipient, subject, template, data):
-    body = render_template(template, **data)
+def send_email(recipient, subject, template, data, no_template = False):
+    body = render_template(template, **data) if not no_template else template
     msg = Message(subject, sender=current_app.config['MAIL_FROM'],
               recipients=[recipient], body = body)
     return mail.send(msg)

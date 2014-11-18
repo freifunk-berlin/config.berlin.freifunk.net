@@ -46,13 +46,13 @@ class NipapApi:
         if self.vrf is None:
             raise Exception("VRF '%s' could not be found" % vrf)
 
-    def _get_by(self, cls, val1, val2):
+    def _get_by(self, cls, val1, val2, search_options = None):
         query = {
             'operator': 'equals',
             'val1': val1,
             'val2': val2
         }
-        return cls.search(query)['result']
+        return cls.search(query, search_options)['result']
 
     def _get_one_by(self, cls, val1, val2):
         req = self._get_by(cls, val1, val2)
@@ -73,6 +73,11 @@ class NipapApi:
     def get_prefixes_by_external_key(self, external_key):
         """Searches for prefixes by external_key."""
         return self._get_by(pynipap.Prefix, 'external_key', '%d' % external_key)
+
+    def get_prefixes_by_pool_name(self, pool_name):
+        # 2^31-1 is max value XML-RPC supports
+        opts = { 'include_all_children': True, 'max_result': (2**31)-1 }
+        return self._get_by(pynipap.Prefix, 'pool_name', pool_name, opts)
 
     def find_free_prefix(self, pool_name, prefix_len = None):
         """Searches for a valid free prefix in a given pool."""
