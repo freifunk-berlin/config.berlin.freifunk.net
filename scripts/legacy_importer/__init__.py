@@ -15,8 +15,9 @@ def import_db(db_user, db_pass, db_host, db_name):
     db_con = db_engine.connect()
 
     users = t_usr.select().execute().fetchall()
-    for user in users:
-        print("\n\n%s <%s>..." % (user[1], user[3])),
+    users_len = len(users)
+    for i, user in enumerate(users):
+        print("\n\n[%d/%d] %s <%s>..." % (i, users_len, user[1], user[3]))
         rows = t_ip.select(t_ip.c.user_id == user[0]).execute().fetchall()
         networks = [IPv4Network(unicode(r[1])) for r in rows]
         collapsed = [c.compressed for c in collapse_addresses(networks)]
@@ -28,7 +29,7 @@ def import_db(db_user, db_pass, db_host, db_name):
                     'tags': ['legacy','imported']
                 }
                 get_api().create_prefix_by_cidr(c, user[3], pool, data)
-            except NipapDuplicateError:
-                pass
 
-        print("\t%s saved." % ",".join(collapsed))
+                print("\t* %s saved." % c)
+            except NipapDuplicateError:
+                print("\t* %s already exists." % c)
