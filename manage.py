@@ -4,7 +4,7 @@ from flask.ext.script import Manager
 from flask.ext.migrate import MigrateCommand
 from app import create_app
 from app.exts import db
-from scripts.legacy_importer import import_db
+from scripts.legacy_importer import legacy_import, legacy_get_mails
 from scripts.cleanup import delete_unconfirmed_requests
 from scripts.mail import get_mail_addresses_for_pools, send_mail_to_pools
 
@@ -31,7 +31,17 @@ def remove_unconfirmed_requests(hours = 48):
 @manager.option('-h', '--host', help='database host (including port)')
 @manager.option('-d', '--database', help='database name')
 def import_legacy(user, password, host, database):
-    import_db(user, password, host, database)
+    legacy_import(user, password, host, database)
+
+
+@manager.command
+@manager.option('-u', '--user', help='database user')
+@manager.option('-p', '--passwort', help='database passwort')
+@manager.option('-h', '--host', help='database host (including port)')
+@manager.option('-d', '--database', help='database name')
+def get_mails_for_legacy(user, password, host, database):
+    for email in legacy_get_mails(user, password, host, database):
+        print(email)
 
 
 @manager.command

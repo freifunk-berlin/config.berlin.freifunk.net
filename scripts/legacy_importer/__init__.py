@@ -7,7 +7,7 @@ from app.nipap import NipapApi
 from ipaddress import IPv4Network, collapse_addresses
 from pynipap import NipapDuplicateError
 
-def import_db(db_user, db_pass, db_host, db_name):
+def legacy_import(db_user, db_pass, db_host, db_name):
     # init and connect to legacy db
     db_uri = 'postgresql://%s:%s@%s/%s' % (db_user, db_pass, db_host, db_name)
     db_engine = create_engine(db_uri, convert_unicode=True)
@@ -33,3 +33,14 @@ def import_db(db_user, db_pass, db_host, db_name):
                 print("\t* %s saved." % c)
             except NipapDuplicateError:
                 print("\t* %s already exists." % c)
+
+def legacy_get_mails(db_user, db_pass, db_host, db_name):
+    # init and connect to legacy db
+    db_uri = 'postgresql://%s:%s@%s/%s' % (db_user, db_pass, db_host, db_name)
+    db_engine = create_engine(db_uri, convert_unicode=True)
+    db_metadata.bind = db_engine
+    db_con = db_engine.connect()
+
+    # retrieves all emails
+    users = t_usr.select().execute().fetchall()
+    return (user[3] for user in users)
