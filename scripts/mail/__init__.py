@@ -8,7 +8,7 @@ def get_mail_addresses_for_pools(pools):
     for pool in pools.split(','):
         prefixes.extend(get_api().get_prefixes_by_pool_name(pool))
 
-    return set([p.customer_id for p in prefixes if '@' in p.customer_id])
+    return set([p.customer_id for p in prefixes if p.customer_id and '@' in p.customer_id])
 
 
 def send_mail_to_pools(pools, subject, template, delay):
