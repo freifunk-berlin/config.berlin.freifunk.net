@@ -23,8 +23,10 @@ def send_mail_to_pools(pools, subject, template, delay):
             (len(recipients), pools))
     raw = raw_input().lower()
     if raw and strtobool(raw):
-        for email in recipients:
+        size = len(recipients)
+        for i,email in enumerate(recipients):
             send_email(email, subject, template, {}, no_template = True)
+            print("%f [%d/%d] %s" % (i/size, i, size, email))
             sleep(float(delay))
     else:
         print("Aborted")
