@@ -108,3 +108,23 @@ def router_db_list(router_db):
                 for device, data in sorted(entries['entries'].items()):
                     name = "%s/%s/%s/%s" % (target, subtarget, profile, device)
                     yield (name, data)
+
+def ip_request_get(request_id):
+    from .models import IPRequest
+    r = IPRequest.query.get(request_id)
+    if r is None:
+        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
+    return r
+
+
+def activate_and_redirect(email_template, request_id, signed_token):
+    r = ip_request_get(request_id)
+    if not r.verified:
+        r.activate(signed_token)
+        url = url_for("main.config_destroy", request_id=r.id,
+                      signed_token=r.token_destroy, _external=True)
+        subject = "[Freifunk Berlin] IPs - %s" % r.name
+        data = {'request' : r, 'url':url}
+        send_email(r.email, subject, email_template, data)
+
+    return redirect(url_for('main.config_show', request_id=r.id, signed_token = r.token_config))

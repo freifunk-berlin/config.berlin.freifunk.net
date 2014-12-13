@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from flask import current_app
+from flask import current_app, redirect, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import BadRequest
 from sqlalchemy.orm import validates
@@ -10,7 +10,7 @@ from wtforms import StringField, HiddenField, SelectField, BooleanField
 from wtforms.validators import Email, AnyOf, Length, Required
 from itsdangerous import URLSafeTimedSerializer
 from .exts import db
-from .utils import gen_random_hash, router_db_get_entry
+from .utils import gen_random_hash, router_db_get_entry, send_email
 from .wizard import get_api
 
 class IPRequest(db.Model):
@@ -118,6 +118,7 @@ class EmailForm(Form):
             raise ValueError(u'Standortname bereits vergeben.')
         return field
 
+
 class DestroyForm(Form):
     email = StringField('Email', validators=[Email()])
     request_id = HiddenField('request_id')
@@ -133,6 +134,7 @@ class DestroyForm(Form):
             raise ValueError(u'Email stimmt nicht überein.')
         return field
 
+
 class ExpertForm(Form):
     email = StringField('Email', validators=[Email()])
     name = StringField('Name', validators=[Length(4,32)])
@@ -144,6 +146,7 @@ class ExpertForm(Form):
         if r > 0:
             raise ValueError(u'Name bereits vergeben.')
         return field
+
 
 class RequiredAny(Required):
     """
@@ -162,15 +165,9 @@ class RequiredAny(Required):
         if not bool(other_field.data):
             super(RequiredAny, self).__call__(form, field)
 
+
 def create_select_field(cls, attr, name, placeholder, choices_raw, depends):
     validators = [RequiredAny(depends, u'Bitte mind. eine Auswahl für IPv4 oder IPv6 treffen')]
     choices = [('', placeholder)] + [(unicode(k),k) for k in choices_raw]
     setattr(cls, attr, SelectField(name, choices=choices,
         validators=validators))
-
-
-def ip_request_get(request_id):
-    r = IPRequest.query.get(request_id)
-    if r is None:
-        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
-    return r

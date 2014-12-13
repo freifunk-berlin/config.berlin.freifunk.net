@@ -4,12 +4,15 @@
         <h2 class="col-md-12">Konfiguration</h2>
         <div class="col-md-12">
           <p>
-            Im Folgenden findest du eine Auflistung der Konfigurationsparameter für deinen Router: 
+            Im Folgenden findest du eine Auflistung der Konfigurationsparameter
           </p>
         </div>
 
         <div class="col-md-12">
           <dl class="dl-horizontal col-md-8">
+            <dt>Hostname</dt>
+            <dd>{{name}}</dd>
+
             {% if router %}
               <dt>Router</dt>
               <dd>{{router.name}}</dd>
@@ -22,19 +25,23 @@
               </dd>
             {% endif %}
 
-            <dt>Mesh-IPs</dt>
-            <dd>
-            {% for ip in ips['mesh'] %}
-            <code>{{ip}}</code> 
-            {% endfor %}
-            </dd>
+            {% if ips['mesh'] %}
+              <dt>Mesh-IPs</dt>
+              <dd>
+              {% for ip in ips['mesh'] %}
+              <code>{{ip}}</code>
+              {% endfor %}
+              </dd>
+            {% endif %}
 
-            <dt>DHCP-Network</dt>
-            <dd>
-            {% for ip in ips['hna'] %}
-            <code>{{ip}}</code> 
-            {% endfor %}
-            </dd>
+            {% if ips['hna'] %}
+              <dt>Addressraum</dt>
+              <dd>
+              {% for ip in ips['hna'] %}
+              <code>{{ip}}</code>
+              {% endfor %}
+              </dd>
+            {% endif %}
           </dl>
 
           {% if router %}
@@ -46,6 +53,7 @@
         </div>
       </div>
 
+      {% if router %}
       <div class="row">
         <h2 class="col-md-12">nächsten Schritte</h2>
       </div>
@@ -62,4 +70,5 @@
         </ul>
       </div>
     </div>
+    {% endif %}
 {% endblock %}
