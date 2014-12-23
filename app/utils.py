@@ -69,7 +69,11 @@ def _get_firmwares_for_router(base_url, data):
         firmware_id = firmware_id[:-1]
 
     prefix =  "%s/openwrt-%s-%s" % (data['target'], '-'.join(firmware_id), data['fs'])
-    return dict([(x, "%s/%s-%s.bin" % (base_url, prefix, x)) for x in ['sysupgrade', 'factory']])
+
+    firmwares = current_app.config['FIRMWARES']
+    for k in firmwares.keys():
+        firmwares[k]['url'] = '%s/%s-%s.bin' % (base_url, prefix, k)
+    return firmwares
 
 
 def router_db_get_entry(router_db, router_id, base_url = None):

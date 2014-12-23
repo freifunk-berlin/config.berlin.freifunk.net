@@ -19,9 +19,17 @@
 
               <dt>Firmware</dt>
               <dd>
-              {% for name,url in router.firmwares.items() %}
-              <a href="{{url}}">{{name}}.bin</a>
-              {% endfor %}
+                {% for raw,firmware in router.firmwares|dictsort %}
+                  <i>{{firmware.name}}</i>
+                  -
+                  <a href="{{firmware.url}}">{{raw}}.bin</a>
+                  <br />
+                  <small>
+                    {{firmware.description}}
+                  </small>
+                  <br />
+                  <br />
+                {% endfor %}
               </dd>
             {% endif %}
 
