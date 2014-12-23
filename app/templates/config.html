@@ -29,7 +29,12 @@
               <dt>Mesh-IPs</dt>
               <dd>
               {% for ip in ips['mesh'] %}
-              <code>{{ip}}</code>
+                {% if not loop.last %}
+                  <code>{{ip}}</code>
+                {% else %}
+                  <br /><code>{{ip}}</code>
+                  (optional - für LAN Meshing)
+                {% endif %}
               {% endfor %}
               </dd>
             {% endif %}
