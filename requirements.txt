@@ -6,3 +6,5 @@ flask-sqlalchemy
 flask-wtf
 pynipap
 itsdangerous
+ipaddress
+psycopg2
