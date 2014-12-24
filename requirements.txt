@@ -1,10 +1,10 @@
 flask
+flask-mail
 flask-migrate
 flask-script
-flask-mail
 flask-sqlalchemy
 flask-wtf
-pynipap
-itsdangerous
 ipaddress
+itsdangerous
 psycopg2
+pynipap
