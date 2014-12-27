@@ -15,7 +15,7 @@ expert = Blueprint('expert', __name__)
 
 @expert.route('/expert/activate/<int:request_id>/<signed_token>')
 def expert_activate(request_id, signed_token):
-    template = 'expert/email_config.txt'
+    template = 'expert/email.txt'
     return activate_and_redirect(template, request_id, signed_token)
 
 

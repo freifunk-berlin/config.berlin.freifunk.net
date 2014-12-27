@@ -19,7 +19,7 @@ wizard = Blueprint('wizard', __name__)
 
 @wizard.route('/wizard/activate/<int:request_id>/<signed_token>')
 def wizard_activate(request_id, signed_token):
-    template = 'wizard/email_config.txt'
+    template = 'wizard/email.txt'
     return activate_and_redirect(template, request_id, signed_token)
 
 

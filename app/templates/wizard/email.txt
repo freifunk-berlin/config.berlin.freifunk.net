@@ -27,7 +27,7 @@ Am besten orientierst du dich an folgenden Anleitungen:
 Wenn du die IP-Adressen nicht mehr brauchst kannst du sie folgendem Link
 löschen:
 
-{{url}}
+  {{url}}
 
 Grüße
 Freifunk Berlin
