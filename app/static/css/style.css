@@ -103,3 +103,7 @@ code {
 .errors {
   color: red;
 }
+
+iframe {
+  margin-bottom: 20px;
+}
