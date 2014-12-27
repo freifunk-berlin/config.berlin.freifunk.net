@@ -1,0 +1,14 @@
+Hey,
+
+du hast eine Auflistung aller deiner berliner Freifunk IPs angefordert. Auf die
+Email-Adresse '{{email}}' sind folgende Adressen registriert:
+
+{{ table }}
+
+Grüße
+Freifunk Berlin
+
+Löschlinks:
+
+{% for link in links %}  [{{loop.index0}}] {{link}}
+{% endfor %}

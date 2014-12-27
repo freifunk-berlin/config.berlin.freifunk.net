@@ -147,6 +147,16 @@ class ExpertForm(Form):
             raise ValueError(u'Name bereits vergeben.')
         return field
 
+class SummaryForm(Form):
+    email = StringField('Email', validators=[Email()])
+
+    @validates('email')
+    def validate_email(self, field):
+        r = IPRequest.query.filter_by(email = field.data)
+        if r is None:
+            raise ValueError(u'Ungültige Anfrage')
+        return field
+
 
 class RequiredAny(Required):
     """

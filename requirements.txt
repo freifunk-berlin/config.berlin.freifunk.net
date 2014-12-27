@@ -6,3 +6,4 @@ flask-sqlalchemy
 flask-wtf
 pynipap
 itsdangerous
+PrettyTable

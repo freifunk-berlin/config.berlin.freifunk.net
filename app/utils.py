@@ -121,6 +121,13 @@ def ip_request_get(request_id):
         raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
     return r
 
+def ip_request_for_email(email):
+    from .models import IPRequest
+    r = IPRequest.query.filter_by(email = email)
+    if r is None:
+        raise BadRequest(u"Kein Eintrag für diese Email")
+    return r
+
 
 def activate_and_redirect(email_template, request_id, signed_token):
     r = ip_request_get(request_id)

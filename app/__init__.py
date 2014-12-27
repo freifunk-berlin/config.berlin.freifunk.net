@@ -5,6 +5,7 @@ from .wizard import wizard
 from .exts import db, mail, migrate
 from .wizard import wizard
 from .expert import expert
+from .summary import summary
 from .main import main
 
 def create_app(config=None):
@@ -15,7 +16,7 @@ def create_app(config=None):
     configure_extensions(app)
     configure_error_handlers(app)
 
-    for blueprint in [main, wizard, expert]:
+    for blueprint in [main, wizard, expert, summary]:
         app.register_blueprint(blueprint)
 
     return app
