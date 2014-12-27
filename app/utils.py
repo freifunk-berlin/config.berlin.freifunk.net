@@ -6,6 +6,7 @@ from functools import wraps
 from itertools import chain
 from flask import redirect, url_for, render_template, g, current_app
 from flask.ext.mail import Message
+from werkzeug.exceptions import BadRequest
 from .nipap import NipapApi
 from .exts import mail
 
