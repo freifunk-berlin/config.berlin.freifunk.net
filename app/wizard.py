@@ -10,7 +10,8 @@ from wtforms import SelectField
 from .utils import request_create, send_email, get_api, router_db_get_entry,\
                    router_db_has_entry, router_db_list, activate_and_redirect,\
                    ip_request_get
-from .models import IPRequest, EmailForm, DestroyForm
+from .models import IPRequest
+from .forms import EmailForm, DestroyForm
 from .exts import db
 
 

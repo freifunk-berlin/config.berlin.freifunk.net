@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from app.utils import get_api
-from app.models import db, IPRequest, EmailForm
+from app.models import db, IPRequest
 
 def delete_unconfirmed_requests(hours):
     current_time = datetime.utcnow()

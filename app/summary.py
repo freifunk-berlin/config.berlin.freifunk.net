@@ -3,7 +3,7 @@
 from flask import Blueprint, url_for, render_template
 from prettytable import PrettyTable
 from utils import ip_request_for_email, send_email
-from models import SummaryForm
+from forms import SummaryForm
 
 summary = Blueprint('summary', __name__)
 

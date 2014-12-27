@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Blueprint, render_template, url_for
-from .models import DestroyForm
+from .forms import DestroyForm
 from .utils import ip_request_get
 
 

@@ -4,7 +4,8 @@ from wtforms import SelectField
 from flask import Blueprint, render_template, redirect, url_for, current_app,\
                   request
 from werkzeug.exceptions import BadRequest
-from .models import IPRequest, ExpertForm, DestroyForm, create_select_field
+from .models import IPRequest
+from forms import ExpertForm, DestroyForm, create_select_field
 from .utils import request_create, send_email, ip_request_get,\
                    activate_and_redirect
 from .exts import db
