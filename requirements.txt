@@ -1,9 +1,11 @@
 flask
+flask-mail
 flask-migrate
 flask-script
-flask-mail
 flask-sqlalchemy
 flask-wtf
-pynipap
+ipaddress
 itsdangerous
 PrettyTable
+psycopg2
+pynipap
