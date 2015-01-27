@@ -81,7 +81,6 @@ Install
 
     $ cd nipap-wizard
     $ pip install -r requirements.txt
-    $ python manage.py initdb
     $ cp config.cfg.dist config.cfg
     $ vim config.cfg                    # add MAIL_PORT = 1025 for development
 
