@@ -3,21 +3,29 @@
       <div class="row">
         <p class="col-md-12 text-center">
           Du bist hier durch Zufall oder mit Absicht auf der IP-Adressenvergabe
-          von den berliner Freifunker_innen gekommen.
+          der <i><a href="http://berlin.freifunk.net/">Berliner Freifunker_innen</a></i> angekommen.
         </p>
 
         <p class="col-md-12 text-center">
-          <a class="button" href="{{url_for('summary.summary_index')}}">
-            IP-Auflistung
-          </a>
-
           <a class="button" href="{{url_for('wizard.wizard_select_router')}}">
-            Wizard
+            IP-Vergabe (Standard/Wizard)
           </a>
 
           <a class="button" href="{{url_for('expert.expert_form')}}">
-            Backbone
+            IP-Vergabe (f&uuml;r Experten)
           </a>
+
+          <br/>
+
+          <a class="button" href="{{url_for('summary.summary_index')}}">
+            Deine Freifunk-IP-Adressen
+          </a>
+        </p>
+
+        <p class="col-md-12 text-center">
+          Die genauen Schritte ins Berliner Freifunk-Netz werden im
+          <i><a href="http://berlin.freifunk.net/participate/howto/">HowTo</a></i>
+          erklärt.
         </p>
 
         <div class="col-md-12 text-center">
@@ -29,17 +37,17 @@
 
         <p class="col-md-12 text-center">
           Bei Bugs oder Anregungen erstelle bitte ein Issue auf
-          <a href="https://github.com/freifunk-berlin/nipap-wizard/issues">
+          <i><a href="https://github.com/freifunk-berlin/nipap-wizard/issues">
             github
-          </a> oder schreib eine
+          </a></i> oder schreib eine
           <a href="mailto:berlin@berlin.freifunk.net">Mail</a>.
-          Für Infos bezüglich dem Setup siehe
-          <a href="https://github.com/freifunk-berlin/nipap-wizard/blob/master/README.md">
+          Für Infos bezüglich des Setups siehe
+          <i><a href="https://github.com/freifunk-berlin/nipap-wizard/blob/master/README.md">
             README
-          </a> oder durchstöbere
-          <a href="https://wiki.freifunk.net/Berlin:Servers">
+          </a></i> oder durchstöbere
+          <i><a href="https://wiki.freifunk.net/Berlin:Servers">
             wiki.freifunk.net/Berlin:Servers
-          </a>.
+          </a></i>.
         </p>
       </div>
 {% endblock %}
