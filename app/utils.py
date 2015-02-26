@@ -64,12 +64,16 @@ def send_email(recipient, subject, template, data, no_template = False):
     return mail.send(msg)
 
 
-def _get_firmwares_for_router(base_url, data):
+def _get_firmwares_for_router(data):
+    base_url = data['base_url']
     firmware_id = data['id']
+    packages = data['packages'] if 'packages' in data else ''
+
     if 'firmware_no_suffix' in data and data['firmware_no_suffix']:
         firmware_id = firmware_id[:-1]
 
-    prefix =  "%s/openwrt-%s-%s" % (data['target'], '-'.join(firmware_id), data['fs'])
+    prefix_data = (data['target'], packages, '-'.join(firmware_id), data['fs'])
+    prefix =  "%s/%s/openwrt-%s-%s" % prefix_data
 
     firmwares = current_app.config['FIRMWARES']
     for k in firmwares.keys():
@@ -77,7 +81,7 @@ def _get_firmwares_for_router(base_url, data):
     return firmwares
 
 
-def router_db_get_entry(router_db, router_id, base_url = None):
+def router_db_get_entry(router_db, router_id):
     if router_id is None:
         return None
 
@@ -94,7 +98,7 @@ def router_db_get_entry(router_db, router_id, base_url = None):
 
     data['target'] = keys[0]
     data['id'] = keys
-    data['firmwares'] = _get_firmwares_for_router(base_url, data)
+    data['firmwares'] = _get_firmwares_for_router(data)
 
     return data
 

@@ -92,8 +92,7 @@ class IPRequest(db.Model):
     @property
     def router(self):
         router_db = current_app.config['ROUTER_DB']
-        base_url = current_app.config['FIRMWARE_BASE_URL']
-        return router_db_get_entry(router_db, self.router_id, base_url)
+        return router_db_get_entry(router_db, self.router_id)
 
 
     def __repr__(self):
