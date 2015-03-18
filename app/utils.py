@@ -128,7 +128,7 @@ def ip_request_get(request_id):
 def ip_request_for_email(email):
     from .models import IPRequest
     r = IPRequest.query.filter_by(email = email)
-    if r is None:
+    if r.count() == 0:
         raise BadRequest(u"Kein Eintrag für diese Email")
     return r
 
