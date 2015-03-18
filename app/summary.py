@@ -9,8 +9,6 @@ summary = Blueprint('summary', __name__)
 
 @summary.route('/summary', methods=['GET', 'POST'])
 def summary_index():
-    email = "cholin@spline.de"
-
     form = SummaryForm()
     if form.validate_on_submit():
         table = PrettyTable()
@@ -29,7 +27,7 @@ def summary_index():
 
         subject = '[Freifunk Berlin] IP-Auflistung'
         data = {'table' : table, 'links' : links, 'email': email}
-        send_email(r.email, subject, 'summary/email.txt', data)
+        send_email(email, subject, 'summary/email.txt', data)
         return render_template('summary/success.html', email = email)
 
     return render_template('summary/form.html', form = form)
