@@ -37,6 +37,13 @@ class DestroyForm(Form):
         return field
 
 
+class ContactMailForm(Form):
+    text = StringField('text')
+    request_id = HiddenField('request_id')
+    token = HiddenField('token')
+    captcha = StringField('Captcha', validators=[captcha_validator])
+
+
 class ExpertForm(Form):
     email = StringField('Email', validators=[Email()])
     name = StringField('Name', validators=[Length(4,32)])

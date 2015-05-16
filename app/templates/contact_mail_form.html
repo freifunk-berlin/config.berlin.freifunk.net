@@ -1,0 +1,33 @@
+{% from '_utils.html' import render_bootstrap_field %}
+
+{% extends "_layout.html" %}
+
+{% block title %}
+Kontakt mit Knoten-Admin aufnehmen
+{% endblock %}
+
+{% block body %}
+      <div class="row">
+        <div class="row flexible">
+          <p class="col-md-4 form-router text-center">
+            Anfrage an Knoten-Admin von {{request.name}}
+          </p>
+          <form class="form-horizontal col-md-8" role="form" action="{{url}}" method="post">
+
+            {{ form.csrf_token }}
+            {{ form.request_id }}
+            {{ form.token }}
+            {{ render_bootstrap_field(form.text, "Text", "Vergiss nicht, eine Antwortmöglichkeit anzugeben (Mail-Adresse, Telefonnummer o.ä.).") }}
+            {{ render_bootstrap_field(form.captcha, "Hauptstadt Deutschlands?", "Wird benötigt um Spam-Bots auszuschließen.") }}
+
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <a href="{{url_for('main.index')}}" class="btn
+                  btn-default">zurück</a>
+                <button type="submit" class="btn btn-default">Absenden</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+{% endblock %}

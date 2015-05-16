@@ -22,10 +22,15 @@ Am besten orientierst du dich an folgenden Informationen:
   Konfigurieren:
     - https://berlin.freifunk.net/participate/howto/config
 
-Wenn du die IP-Adressen nicht mehr brauchst, kannst du sie folgendem Link
-löschen:
+Du kannst folgenden Link z.B. im Router als Kontakt-Link eintragen;
+über diesen Link können dir andere Leute E-Mails schicken:
 
-  {{url}}
+  {{url_contactmail}}
+
+Wenn du die IP-Adressen nicht mehr brauchst, kannst du sie mit dem
+folgendem Link löschen:
+
+  {{url_destroy}}
 
 Grüße
 Freifunk Berlin
