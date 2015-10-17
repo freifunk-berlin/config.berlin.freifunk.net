@@ -83,8 +83,6 @@ def create_select_field(cls, attr, name, placeholder, choices_raw, depends):
 
     try:
         choices = [('', placeholder)] + [(unicode(k),v) for k,v in choices_raw]
-        print(choices_raw)
-        print(choices)
     except ValueError:
         choices = [('', placeholder)] + [(unicode(k),k) for k in choices_raw]
 
