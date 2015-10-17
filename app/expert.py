@@ -22,7 +22,10 @@ def expert_activate(request_id, signed_token):
 @expert.route('/expert/form', methods=['GET', 'POST'])
 def expert_form():
     # add select fields dynamically (because they get their data from config)
-    ipv4_prefixes = range(32, current_app.config['EXPERT_MAX_PREFIX']-1, -1)
+    prefix_range = range(32, current_app.config['EXPERT_MAX_PREFIX']-1, -1)
+    ipv4_prefixes = [(x, "/{} ({} IPs)".format(x, 2**(32-x)))
+            for x in prefix_range]
+
     create_select_field(ExpertForm, 'ipv4_prefix', u'IPv4-Präfix', 'kein IPv4',
             ipv4_prefixes, 'ipv6_pool')
     create_select_field(ExpertForm, 'ipv6_pool', u'Wahlkreis', 'kein IPv6',

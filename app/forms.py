@@ -80,6 +80,13 @@ class RequiredAny(Required):
 
 def create_select_field(cls, attr, name, placeholder, choices_raw, depends):
     validators = [RequiredAny(depends, u'Bitte mind. eine Auswahl für IPv4 oder IPv6 treffen')]
-    choices = [('', placeholder)] + [(unicode(k),k) for k in choices_raw]
+
+    try:
+        choices = [('', placeholder)] + [(unicode(k),v) for k,v in choices_raw]
+        print(choices_raw)
+        print(choices)
+    except ValueError:
+        choices = [('', placeholder)] + [(unicode(k),k) for k in choices_raw]
+
     setattr(cls, attr, SelectField(name, choices=choices,
         validators=validators))
