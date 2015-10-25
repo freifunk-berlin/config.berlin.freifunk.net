@@ -4,6 +4,7 @@ flask-migrate
 flask-script
 flask-sqlalchemy
 flask-wtf
+flask-restful
 ipaddress
 itsdangerous
 PrettyTable
