@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import current_app, redirect, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import BadRequest
-from itsdangerous import URLSafeTimedSerializer
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from .exts import db
 from .utils import gen_random_hash, router_db_get_entry, send_email
 from .wizard import get_api
@@ -27,7 +27,7 @@ class IPRequest(db.Model):
 
     def activate(self, signed_token, timeout = 3600):
         if not self._verify(signed_token, 'activation', timeout):
-            raise BadRequest(u"Dein Token ist ungültig oder bereits abgelaufen")
+            raise BadRequest(u"Dein Token ist ungültig oder bereits abgelaufen. Registriere dir neue IPs!")
 
         get_api().activate_ips(self.id)
         self.verified = True
@@ -51,7 +51,11 @@ class IPRequest(db.Model):
 
     def _verify(self, signed_token, salt, timeout = None):
         serializer = URLSafeTimedSerializer(self.token, salt)
-        return self.name == serializer.loads(signed_token, max_age=timeout)
+        try:
+          name = serializer.loads(signed_token, max_age=timeout)
+          return self.name == serializer.loads(signed_token, max_age=timeout)
+        except SignatureExpired:
+          return False
 
 
     def _gen_signed_token(self, salt):
