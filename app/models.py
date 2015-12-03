@@ -25,7 +25,8 @@ class IPRequest(db.Model):
         self.token = gen_random_hash(32)
 
 
-    def activate(self, signed_token, timeout = 3600):
+    def activate(self, signed_token):
+        timeout = current_app.config['ACTIVATION_TIMEOUT']
         if not self._verify(signed_token, 'activation', timeout):
             raise BadRequest(u"Dein Token ist ungültig oder bereits abgelaufen. Registriere dir neue IPs!")
 
