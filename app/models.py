@@ -28,6 +28,9 @@ class IPRequest(db.Model):
     def activate(self, signed_token):
         timeout = current_app.config['ACTIVATION_TIMEOUT']
         if not self._verify(signed_token, 'activation', timeout):
+            # request invalid -> delete it!
+            db.session.delete(self)
+            db.session.commit()
             raise BadRequest(u"Dein Token ist ungültig oder bereits abgelaufen. Registriere dir neue IPs!")
 
         get_api().activate_ips(self.id)
