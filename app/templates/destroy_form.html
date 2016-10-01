@@ -11,6 +11,7 @@ Antrag löschen
         <div class="col-md-12">
           <form class="form-horizontal" role="form" action="{{url}}" method="post">
 
+            {{ render_bootstrap_text("Name", request.name) }}
             {{ render_bootstrap_text("IPs", ', '.join(request.ips), '') }}
             {{ form.csrf_token }}
             {{ form.request_id }}
