@@ -1,6 +1,6 @@
 Hey,
 
-du hast eine Auflistung aller deiner berliner Freifunk IPs angefordert. Auf die
+du hast eine Auflistung aller deiner Berliner Freifunk IPs angefordert. Auf die
 Email-Adresse '{{email}}' sind folgende Adressen registriert:
 
 {{ table }}
