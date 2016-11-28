@@ -1,50 +1,21 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-Router auswählen
+IP-Vergabe
 {% endblock %}
 
 {% block body %}
       <div class="row">
         <div class="col-md-12">
           <p>
-          Bevor du eine IP-Adresse bekommst, wähle bitte deinen Router aus,
-          damit wir dir einen Link zur passenden Firmware schicken können.
-          Die Firmware ist vom Router-Modell abhängig. Das Modell und die
-          Versionsnummer deines Routers findest du auf der Rückseite des
-          Gerätes.
-          Falls du deinen Router bereits mit Freifunk-Firmware ausgestattet
-          hast, kannst du ein beliebiges Modell wählen und die weiteren
-          Angaben zur Firmware ignorieren.
+          Du bekommst hier eine IP-Adresse für den Router, den du dir
+          aus der Tabelle im Wiki-Artikel
+          <a href="https://wiki.freifunk.net/Berlin:Firmware">Berlin:Firmware</a>
+          ausgesucht hast.
           </p>
-          
-          <p>TP-Link-Router, deren Modellname auf ND endet, sollten mit den
-          ansonsten gleichnamigen, auf N endenden, kompatibel sein
-          (das D verweist nur auf abnehmbare Antennen). Bei der 
-          TP-Link-Versionsnummer kommt es nur auf die erste Stelle an.
-          </p>
-          
           <p>
-          <strong>Anmerkung:</strong>
-          Die folgende Liste ist <strong>nicht</strong> als Liste
-          <em>empfohlener</em> Router zu verstehen. Gut getestet sind nur die unter
-          <a href="http://berlin.freifunk.net/participate/overview/">Mitmachen/Überblick</a>
-          gelisteten Router. Insbesondere die Router mit nur 4MB Flash (u.a. die WR7xx und der WR841N)
-          empfehlen wir <b>nicht</b> (<a href="https://wiki.freifunk.net/Berlin:Firmware#Kann_ich_den_Router_XYZ.2Fden_alten_Linksys_WRT54G_mit_der_aktuellen_Firmware_benutzen.3F">Details</a>).
+          <b><a href="/wizard/routers/ar71xx/generic/defaultRouter/v1">weiter =&gt;</a></b>
           </p>
         </div>
-      </div>
-
-      <div class="row">
-        <ul id="routers" class="list-unstyled col-md-12">
-          {% for id, device in routers %}
-          <li class="col-md-3">
-            <a class="text-center thumbnail router" href="{{url_for('.wizard_select_router', router_id=id)}}">
-              <img src="{{url_for('static', filename=device.img)}}" alt="{{device.name}}" />
-                {{device.name}}
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
       </div>
 {% endblock %}

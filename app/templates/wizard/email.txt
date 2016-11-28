@@ -1,37 +1,31 @@
 Hey,
 
-für deinen Freifunk Router '{{request.name}}' gibts folgende Konfiguration:
-
-Firmware - {{request.router.name}}:
-{% for raw,firmware in request.router.firmwares|dictsort %}
-  * {{firmware.name}} - {{raw}}.bin [{{loop.index}}] 
-    {{firmware.description}}
-{% endfor %}
+für deinen Freifunk-Router '{{request.name}}' gibt's folgende Konfiguration:
 
 Mesh-IPs:
-{% for ip in request.ips_pretty['mesh'] %} * {{ip}} {% if loop.last %} (optional - für LAN Meshing) {% endif %}
+{% for ip in request.ips_pretty['mesh'] %} * {{ip}}
 {% endfor %}
+Wahrscheinlich brauchst du für deinen Router nicht alle obigen IPs.
 
 DHCP-Network:
 {% for ip in request.ips_pretty['hna'] %} {{ip}}
 {% endfor %}
 
-Am besten orientierst du dich an folgenden Anleitungen:
+Am besten orientierst du dich an folgenden Informationen:
+
+  Firmware-Downloads und häufige Fragen:
+    - https://wiki.freifunk.net/Berlin:Firmware
 
   Flashen (Betriebsystem installieren):
-    - http://berlin.freifunk.net/participate/howto/flash
+    - https://berlin.freifunk.net/participate/howto/flash
 
   Konfigurieren:
-    - http://berlin.freifunk.net/participate/howto/config
+    - https://berlin.freifunk.net/participate/howto/config
 
-Wenn du die IP-Adressen nicht mehr brauchst kannst du sie folgendem Link
+Wenn du die IP-Adressen nicht mehr brauchst, kannst du sie folgendem Link
 löschen:
 
   {{url}}
 
 Grüße
 Freifunk Berlin
-
-
-{% for k,v in request.router.firmwares|dictsort %}[{{loop.index}}] {{v.url}}
-{% endfor %}

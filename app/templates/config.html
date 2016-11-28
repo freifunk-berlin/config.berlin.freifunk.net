@@ -8,7 +8,7 @@ Konfiguration
       <div class="row">
         <div class="col-md-12">
           <p>
-            Im Folgenden findest du eine Auflistung der Konfigurationsparameter
+            Im Folgenden findest du eine Auflistung der Konfigurationsparameter.
           </p>
         </div>
 
@@ -23,17 +23,7 @@ Konfiguration
 
               <dt>Firmware</dt>
               <dd>
-                {% for raw,firmware in router.firmwares|dictsort %}
-                  <em>{{firmware.name}}</em>
-                  -
-                  <a href="{{firmware.url}}">{{raw}}.bin</a>
-                  <br />
-                  <small>
-                    {{firmware.description}}
-                  </small>
-                  <br />
-                  <br />
-                {% endfor %}
+                siehe Tabelle im Wiki-Artikel <a href="https://wiki.freifunk.net/Berlin:Firmware">Berlin:Firmware</a>
               </dd>
             {% endif %}
 
@@ -41,18 +31,13 @@ Konfiguration
               <dt>Mesh-IPs</dt>
               <dd>
               {% for ip in ips['mesh'] %}
-                {% if not loop.last %}
-                  <code>{{ip}}</code>
-                {% else %}
-                  <br /><code>{{ip}}</code>
-                  (optional - für LAN Meshing)
-                {% endif %}
+                <code>{{ip}}</code>
               {% endfor %}
               </dd>
             {% endif %}
 
             {% if ips['hna'] %}
-              <dt>Addressraum</dt>
+              <dt>DHCP-Network</dt>
               <dd>
               {% for ip in ips['hna'] %}
               <code>{{ip}}</code>
@@ -60,30 +45,24 @@ Konfiguration
               </dd>
             {% endif %}
           </dl>
-
-          {% if router %}
-          <p class="col-md-4 form-router text-center">
-            <img src="{{url_for('static', filename=router.img)}}" alt="{{router.name}}" />
-            {{router.name}}
-          </p>
-          {% endif %}
         </div>
       </div>
 
       {% if router %}
       <div class="row">
-        <h2 class="col-md-12">nächsten Schritte</h2>
+        <h2 class="col-md-12">Nächste Schritte</h2>
       </div>
 
       <div class="row">
         <p class="col-md-12">
           Mit Hilfe der Konfigurationsparameter kannst du nun deinen Router
-          <em>flashen</em>. Das heißt das Freifunk-Betriebssystem installieren
-          und konfigurieren. Hierzu folgst du am besten den Anleitungen:
+          <em>flashen</em>. Das heißt, das Freifunk-Betriebssystem installieren
+          und konfigurieren. Hierzu folgst du am besten diesen Informationen:
         </p>
         <ul class="col-md-l col-md-offset-1">
-          <li><a href="http://berlin.freifunk.net/participate/howto/flash">Router flashen</a></li>
-          <li><a href="http://berlin.freifunk.net/participate/howto/config">Router konfigurieren</a></li>
+          <li><a href="https://wiki.freifunk.net/Berlin:Firmware">Berlin:Firmware</a> - Wiki-Artikel mit Firmware-Images und häufigen Fragen</li>
+          <li><a href="https://berlin.freifunk.net/participate/howto/flash">Router flashen</a></li>
+          <li><a href="https://berlin.freifunk.net/participate/howto/config">Router konfigurieren</a></li>
         </ul>
       </div>
     </div>
