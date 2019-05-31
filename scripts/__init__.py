@@ -1,7 +1,7 @@
 from manage import manager
 from app.exts import db
 from legacy_importer import legacy_import, legacy_get_mails
-from cleanup import delete_unconfirmed_requests
+from cleanup import delete_unconfirmed_requests, delete_orphaned_prefixes
 from mail import get_mail_addresses_for_pools, send_mail_to_pools
 
 @manager.command
@@ -15,6 +15,9 @@ def resetdb():
 def remove_unconfirmed_requests(hours = 48):
     delete_unconfirmed_requests(int(hours))
 
+@manager.command
+def remove_orphaned_prefixes():
+    delete_orphaned_prefixes()
 
 @manager.command
 @manager.option('-u', '--user', help='database user')
