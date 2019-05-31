@@ -1,0 +1,14 @@
+Hey,
+
+dir hat jemand über deine Web-Mail-URL bei config.berlin.freifunk.net
+eine Nachricht geschickt:
+
+===
+
+{{text}}
+
+===
+
+Grüße
+Freifunk Berlin
+

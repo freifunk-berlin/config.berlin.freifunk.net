@@ -1,0 +1,26 @@
+{% from '_utils.html' import render_bootstrap_field, render_bootstrap_text %}
+
+{% extends "_layout.html" %}
+
+{% block title %}
+Kontakt-Mail schicken
+{% endblock %}
+
+{% block body %}
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-center">
+            {{ result }}
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-center">
+            <a href="{{url_for('main.index')}}">zurück zur Startseite</a>
+          </p>
+        </div>
+      </div>
+
+{% endblock %}
