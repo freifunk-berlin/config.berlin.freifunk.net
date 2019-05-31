@@ -49,8 +49,8 @@ class NipapApi:
     def _get_by(self, cls, val1, val2, search_options = None):
         query = {
             'operator': 'equals',
-            'val1': val1,
-            'val2': val2
+            'val1': str(val1),
+            'val2': str(val2)
         }
         return cls.search(query, search_options)['result']
 

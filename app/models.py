@@ -5,6 +5,7 @@ from flask import current_app, redirect, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import BadRequest
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+from sqlalchemy import event
 from .exts import db
 from .utils import gen_random_hash, router_db_get_entry, send_email
 from .wizard import get_api
@@ -48,7 +49,8 @@ class IPRequest(db.Model):
         if not self._verify(signed_token, 'destroy'):
             raise BadRequest(u"Dein Token ist ungültig!")
 
-        get_api().delete_prefixes_by_id(self.id)
+        # delete event is used fore deletion
+        #get_api().delete_prefixes_by_id(self.id)
         db.session.delete(self)
         db.session.commit()
 
@@ -105,3 +107,8 @@ class IPRequest(db.Model):
 
     def __repr__(self):
         return '<IPRequest %r>' % self.email
+
+
+@event.listens_for(IPRequest, 'after_delete')
+def _cleanup_nipap(mapper, connection, target):
+    get_api().delete_prefixes_by_id(target.id)
