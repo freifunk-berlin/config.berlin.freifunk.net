@@ -16,11 +16,8 @@ Am besten orientierst du dich an folgenden Informationen:
   Firmware-Downloads und häufige Fragen:
     - https://wiki.freifunk.net/Berlin:Firmware
 
-  Flashen (Betriebsystem installieren):
-    - https://berlin.freifunk.net/participate/howto/flash
-
-  Konfigurieren:
-    - https://berlin.freifunk.net/participate/howto/config
+  Freifunk-Firmware auf Router aufsetzen:
+    - https://wiki.freifunk.net/Berlin:Firmware:Howto
 
 Du kannst folgenden Link z.B. im Router als Kontakt-Link eintragen;
 über diesen Link können dir andere Leute E-Mails schicken:
