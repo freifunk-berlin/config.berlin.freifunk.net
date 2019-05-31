@@ -17,16 +17,21 @@ def summary_index():
         table.add_column(u'Name', map(lambda x: x.name, requests))
         table.add_column(u'IPs', map(lambda x: ', '.join(x.ips), requests))
         table.add_column(u'Vom', map(lambda x: x.created_at.strftime('%d.%m.%Y'), requests))
-        table.add_column(u'Löschlink', ['[%d]' % x for x in range(len(requests))])
+        table.add_column(u'Löschen', ['[D%d]' % x for x in range(len(requests))])
+        table.add_column(u'Kontakt', ['[M%d]' % x for x in range(len(requests))])
 
-        links = []
+        dellinks = []
+        contactlinks = []
         for r in requests:
             url = url_for("main.config_destroy", request_id=r.id,
                           signed_token=r.token_destroy, _external=True)
-            links.append(url)
+            dellinks.append(url)
+            url = url_for("main.contact_mail", request_id=r.id,
+                          signed_token=r.token_contactmail, _external=True)
+            contactlinks.append(url)
 
         subject = '[Freifunk Berlin] IP-Auflistung'
-        data = {'table' : table, 'links' : links, 'email': email}
+        data = {'table' : table, 'dellinks' : dellinks, 'contactlinks' : contactlinks, 'email': email}
         send_email(email, subject, 'summary/email.txt', data)
         return render_template('summary/success.html', email = email)
 

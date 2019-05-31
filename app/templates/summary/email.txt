@@ -10,5 +10,10 @@ Freifunk Berlin
 
 Löschlinks:
 
-{% for link in links %}  [{{loop.index0}}] {{link}}
+{% for link in dellinks %}  [D{{loop.index0}}] {{link}}
+{% endfor %}
+
+E-Mail-Kontakt-Links:
+
+{% for link in contactlinks %}  [M{{loop.index0}}] {{link}}
 {% endfor %}
