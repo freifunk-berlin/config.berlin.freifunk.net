@@ -1,21 +1,26 @@
-Freifunk Berlin IPAM
-====================
+config.berlin.freifunk.net Freifunk Berlin IPAM
+===============================================
 
-Our ip address management system is basically a running NIPAP instance with two
-frontends:
+Our ip address management system is basically a running NIPAP instance
+(see https://spritelink.github.io/NIPAP/ ) with two frontends:
 * nipap-www for advanced users (typically backbone maintainers)
-* nipap-wizard for others
+* nipap-wizard for others (available at https://config.berlin.freifunk.net/ )
 
 How to install nipap for development
 ------------------------------------
+The following is mostly outdated. Just follow
+https://spritelink.github.io/NIPAP/docs/INSTALL.html
+and use the prebuilt packages.
+Make sure the `postgresql-X.Y-ip4r` package is installed as well.
 
+Outdated:
 The Makefile in v0.26.4 seems to be broken. There are patches in directory
 `patches` to fix this. You will need `postgresql` and `virtualenv2` as well.
 
 Get source and patch it:
 
 ```
-$ git clone git@github.com:freifunk-berlin/nipap-wizard.git
+$ git clone git@github.com:freifunk-berlin/config.berlin.freifunk.net.git
 $ git clone https://github.com/SpriteLink/NIPAP
 $ cd NIPAP
 $ virtualenv2 env
