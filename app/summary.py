@@ -17,6 +17,7 @@ def summary_index():
         table.add_column(u'Name', map(lambda x: x.name, requests))
         table.add_column(u'IPs', map(lambda x: ', '.join(x.ips), requests))
         table.add_column(u'Vom', map(lambda x: x.created_at.strftime('%d.%m.%Y'), requests))
+        table.add_column(u'Bestätigt', map(lambda x: x.verified, requests))
         table.add_column(u'Löschen', ['[D%d]' % x for x in range(len(requests))])
         table.add_column(u'Kontakt', ['[M%d]' % x for x in range(len(requests))])
 
