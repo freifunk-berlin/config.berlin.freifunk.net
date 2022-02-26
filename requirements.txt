@@ -7,5 +7,5 @@ flask-wtf
 ipaddress
 itsdangerous
 PrettyTable
-psycopg2
+psycopg2-binary
 pynipap
