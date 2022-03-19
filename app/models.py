@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from flask import current_app, redirect, url_for
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import BadRequest
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from sqlalchemy import event
