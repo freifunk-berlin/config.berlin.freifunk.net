@@ -7,6 +7,7 @@ LOG_FILE_PATH='/var/log/nipap-wizard'
 SECRET_KEY = '<enter your secret here>'
 
 SQLALCHEMY_DATABASE_URI = '<SQL_ALCHEMY_DATABASE>'
+SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 MAIL_FROM = 'no-reply@ip.berlin.freifunk.net'
 

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from sqlalchemy.orm import validates
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, HiddenField, SelectField, BooleanField
 from wtforms.validators import Email, AnyOf, Length, Required
 from .models import IPRequest
 
 captcha_validator = AnyOf(('Berlin', 'berlin'),
         message=u'Falsch. Wie heisst die Hauptstadt Deutschlands?')
-class EmailForm(Form):
+class EmailForm(FlaskForm):
     email = StringField('Email', validators=[Email()])
     hostname = StringField('Name', validators=[Length(4,32)])
     captcha = StringField('Captcha', validators=[captcha_validator])
@@ -21,7 +21,7 @@ class EmailForm(Form):
         return field
 
 
-class DestroyForm(Form):
+class DestroyForm(FlaskForm):
     email = StringField('Email', validators=[Email()])
     request_id = HiddenField('request_id')
     token = HiddenField('token')
@@ -37,14 +37,14 @@ class DestroyForm(Form):
         return field
 
 
-class ContactMailForm(Form):
+class ContactMailForm(FlaskForm):
     text = StringField('text')
     request_id = HiddenField('request_id')
     token = HiddenField('token')
     captcha = StringField('Captcha', validators=[captcha_validator])
 
 
-class ExpertForm(Form):
+class ExpertForm(FlaskForm):
     email = StringField('Email', validators=[Email()])
     name = StringField('Name', validators=[Length(4,32)])
     captcha = StringField('Captcha', validators=[captcha_validator])
@@ -56,7 +56,7 @@ class ExpertForm(Form):
             raise ValueError(u'Name bereits vergeben.')
         return field
 
-class SummaryForm(Form):
+class SummaryForm(FlaskForm):
     email = StringField('Email', validators=[Email()])
 
     @validates('email')
