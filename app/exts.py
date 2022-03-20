@@ -3,8 +3,8 @@
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
-from flask.ext.mail import Mail
+from flask_mail import Mail
 mail = Mail()
 
-from flask.ext.migrate import Migrate
+from flask_migrate import Migrate
 migrate = Migrate()
