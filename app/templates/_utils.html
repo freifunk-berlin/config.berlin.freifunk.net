@@ -1,8 +1,8 @@
-{% macro render_bootstrap_field(field, placeholder, help) %}
+{% macro render_bootstrap_field(field, placeholder, help, required=true) %}
 <div class="form-group {% if field.errors %} error {% endif %}">
     <label class="col-md-2 control-label">{{ field.label }}</label>
     <div class="col-md-10">
-        {{ field(class='form-control', placeholder=placeholder)|safe }}
+        {{ field(class='form-control', placeholder=placeholder, required=required)|safe }}
         {% if field.errors %}
             {% for error in field.errors %}
                 <span class="errors">{{ error }}</span><br>
