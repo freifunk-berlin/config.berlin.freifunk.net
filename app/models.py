@@ -32,7 +32,7 @@ class IPRequest(db.Model):
             # request invalid -> delete it!
             db.session.delete(self)
             db.session.commit()
-            raise BadRequest(u"Dein Token ist ungültig oder bereits abgelaufen. Registriere dir neue IPs!")
+            raise BadRequest("Dein Token ist ungültig oder bereits abgelaufen. Registriere dir neue IPs!")
 
         get_api().activate_ips(self.id)
         self.verified = True
@@ -42,12 +42,12 @@ class IPRequest(db.Model):
 
     def viewable(self, signed_token):
         if not self._verify(signed_token, 'config'):
-            raise BadRequest(u"Dein Token ist ungültig")
+            raise BadRequest("Dein Token ist ungültig")
 
 
     def destroy(self, signed_token):
         if not self._verify(signed_token, 'destroy'):
-            raise BadRequest(u"Dein Token ist ungültig!")
+            raise BadRequest("Dein Token ist ungültig!")
 
         # delete event is used fore deletion
         #get_api().delete_prefixes_by_id(self.id)
@@ -57,7 +57,7 @@ class IPRequest(db.Model):
 
     def sendcontactmail(self, signed_token):
         if not self._verify(signed_token, 'contactmail'):
-            raise BadRequest(u"Dein Token ist ungültig!")
+            raise BadRequest("Dein Token ist ungültig!")
 
 
     def _verify(self, signed_token, salt, timeout = None):

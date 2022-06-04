@@ -97,7 +97,7 @@ class NipapApi:
         prefix = pynipap.Prefix()
         prefix.vrf = self.vrf
         prefix.type = prefix_type
-        for k,v in data.items():
+        for k,v in list(data.items()):
             setattr(prefix, k, v)
 
         args = {'from-pool': pool, 'family': family}
@@ -152,7 +152,7 @@ class NipapApi:
         p.type = 'assignment'
         p.prefix = cidr
         p.customer_id = email
-        for k,v in data.items():
+        for k,v in list(data.items()):
             setattr(p, k, v)
 
         if pool is not None:

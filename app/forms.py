@@ -7,7 +7,7 @@ from wtforms.validators import Email, AnyOf, Length, Required
 from .models import IPRequest
 
 captcha_validator = AnyOf(('Berlin', 'berlin'),
-        message=u'Falsch. Wie heisst die Hauptstadt Deutschlands?')
+        message='Falsch. Wie heisst die Hauptstadt Deutschlands?')
 class EmailForm(FlaskForm):
     email = StringField('Email', validators=[Email()])
     hostname = StringField('Name', validators=[Length(4,32)])
@@ -17,7 +17,7 @@ class EmailForm(FlaskForm):
     def validate_hostname(self, field):
         r = IPRequest.query.filter_by(name=field.data).count()
         if r > 0:
-            raise ValueError(u'Standortname bereits vergeben.')
+            raise ValueError('Standortname bereits vergeben.')
         return field
 
 
@@ -30,10 +30,10 @@ class DestroyForm(FlaskForm):
     def validate_email(self, field):
         r = IPRequest.query.get(self.request_id.data)
         if r is None:
-            raise ValueError(u'Ungültige Anfrage')
+            raise ValueError('Ungültige Anfrage')
 
         if field.data != r.email:
-            raise ValueError(u'Email stimmt nicht überein.')
+            raise ValueError('Email stimmt nicht überein.')
         return field
 
 
@@ -53,7 +53,7 @@ class ExpertForm(FlaskForm):
     def validate_name(self, field):
         r = IPRequest.query.filter_by(name=field.data).count()
         if r > 0:
-            raise ValueError(u'Name bereits vergeben.')
+            raise ValueError('Name bereits vergeben.')
         return field
 
 class SummaryForm(FlaskForm):
@@ -63,7 +63,7 @@ class SummaryForm(FlaskForm):
     def validate_email(self, field):
         r = IPRequest.query.filter_by(email = field.data)
         if r is None:
-            raise ValueError(u'Ungültige Anfrage')
+            raise ValueError('Ungültige Anfrage')
         return field
 
 
@@ -86,7 +86,7 @@ class RequiredAny(Required):
 
 
 def create_select_field(cls, attr, name, placeholder, choices_raw, depends):
-    validators = [RequiredAny(depends, u'Bitte mind. eine Auswahl für IPv4 oder IPv6 treffen')]
-    choices = [('', placeholder)] + [(unicode(k),k) for k in choices_raw]
+    validators = [RequiredAny(depends, 'Bitte mind. eine Auswahl für IPv4 oder IPv6 treffen')]
+    choices = [('', placeholder)] + [(str(k),k) for k in choices_raw]
     setattr(cls, attr, SelectField(name, choices=choices,
         validators=validators))

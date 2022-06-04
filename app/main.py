@@ -15,7 +15,7 @@ def index():
 def config_show(request_id, signed_token):
     r = ip_request_get(request_id)
     if r.viewable(signed_token) or not r.verified:
-        raise BadRequest(u"Eintrag wurde bisher noch nicht aktiviert!")
+        raise BadRequest("Eintrag wurde bisher noch nicht aktiviert!")
 
     return render_template('config.html', name=r.name, ips=r.ips_pretty,
                                           router=r.router)

@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, redirect, url_for, current_app,\
                   request
 from werkzeug.exceptions import BadRequest
 from .models import IPRequest
-from forms import ExpertForm, DestroyForm, create_select_field
+from .forms import ExpertForm, DestroyForm, create_select_field
 from .utils import request_create, send_email, ip_request_get,\
                    activate_and_redirect
 from .exts import db
@@ -22,10 +22,10 @@ def expert_activate(request_id, signed_token):
 @expert.route('/expert/form', methods=['GET', 'POST'])
 def expert_form():
     # add select fields dynamically (because they get their data from config)
-    ipv4_prefixes = range(32, current_app.config['EXPERT_MAX_PREFIX']-1, -1)
-    create_select_field(ExpertForm, 'ipv4_prefix', u'IPv4-Präfix', 'kein IPv4',
+    ipv4_prefixes = list(range(32, current_app.config['EXPERT_MAX_PREFIX']-1, -1))
+    create_select_field(ExpertForm, 'ipv4_prefix', 'IPv4-Präfix', 'kein IPv4',
             ipv4_prefixes, 'ipv6_pool')
-    create_select_field(ExpertForm, 'ipv6_pool', u'Wahlkreis', 'kein IPv6',
+    create_select_field(ExpertForm, 'ipv6_pool', 'Wahlkreis', 'kein IPv6',
             current_app.config['API_POOL_IPV6'], 'ipv4_prefix')
 
     form = ExpertForm()

@@ -41,7 +41,7 @@ def wizard_form(router_id):
 
     # add location type field dynamically (values are set in config)
     prefix_defaults = current_app.config['PREFIX_DEFAULTS']
-    choices = [(k,k) for k in prefix_defaults.keys()]
+    choices = [(k,k) for k in list(prefix_defaults.keys())]
     setattr(EmailForm, 'location_type', SelectField('Ort', choices=choices))
 
     form = EmailForm()

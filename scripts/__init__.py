@@ -1,8 +1,8 @@
 from manage import manager
 from app.exts import db
-from legacy_importer import legacy_import, legacy_get_mails
-from cleanup import delete_unconfirmed_requests, delete_orphaned_prefixes
-from mail import get_mail_addresses_for_pools, send_mail_to_pools
+from .legacy_importer import legacy_import, legacy_get_mails
+from .cleanup import delete_unconfirmed_requests, delete_orphaned_prefixes
+from .mail import get_mail_addresses_for_pools, send_mail_to_pools
 
 @manager.command
 def resetdb():

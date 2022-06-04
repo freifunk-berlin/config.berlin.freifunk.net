@@ -76,7 +76,7 @@ def _get_firmwares_for_router(data):
     prefix =  "%s/%s/openwrt-%s-%s" % prefix_data
 
     firmwares = current_app.config['FIRMWARES']
-    for k in firmwares.keys():
+    for k in list(firmwares.keys()):
         firmwares[k]['url'] = '%s/%s-%s.bin' % (base_url, prefix, k)
     return firmwares
 
@@ -86,13 +86,13 @@ def router_db_get_entry(router_db, router_id):
         return None
 
     cursor = router_db
-    data = dict([(k,v) for k,v in cursor.items() if k != 'entries'])
+    data = dict([(k,v) for k,v in list(cursor.items()) if k != 'entries'])
     keys = router_id.split('/')
     for n in keys:
         cursor = cursor['entries'][n]
 
         # merge data
-        for k,v in cursor.items():
+        for k,v in list(cursor.items()):
             if k != 'entries':
                 data[k] = v
 
@@ -122,14 +122,14 @@ def ip_request_get(request_id):
     from .models import IPRequest
     r = IPRequest.query.get(request_id)
     if r is None:
-        raise BadRequest(u"Ungültige ID. Hast du den Eintrag bereits gelöscht?")
+        raise BadRequest("Ungültige ID. Hast du den Eintrag bereits gelöscht?")
     return r
 
 def ip_request_for_email(email):
     from .models import IPRequest
     r = IPRequest.query.filter_by(email = email)
     if r.count() == 0:
-        raise BadRequest(u"Kein Eintrag für diese Email")
+        raise BadRequest("Kein Eintrag für diese Email")
     return r
 
 

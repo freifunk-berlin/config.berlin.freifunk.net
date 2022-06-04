@@ -17,9 +17,9 @@ def legacy_import(db_user, db_pass, db_host, db_name):
     users = t_usr.select().execute().fetchall()
     users_len = len(users)
     for i, user in enumerate(users):
-        print("\n\n[%d/%d] %s <%s>..." % (i, users_len, user[1], user[3]))
+        print(("\n\n[%d/%d] %s <%s>..." % (i, users_len, user[1], user[3])))
         rows = t_ip.select(t_ip.c.user_id == user[0]).execute().fetchall()
-        networks = [IPv4Network(unicode(r[1])) for r in rows]
+        networks = [IPv4Network(str(r[1])) for r in rows]
         collapsed = [c.compressed for c in collapse_addresses(networks)]
         for c in collapsed:
             pool = current_app.config['API_POOL_LEGACY']
@@ -30,9 +30,9 @@ def legacy_import(db_user, db_pass, db_host, db_name):
                 }
                 get_api().create_prefix_by_cidr(c, user[3], pool, data)
 
-                print("\t* %s saved." % c)
+                print(("\t* %s saved." % c))
             except NipapDuplicateError:
-                print("\t* %s already exists." % c)
+                print(("\t* %s already exists." % c))
 
 def legacy_get_mails(db_user, db_pass, db_host, db_name):
     # init and connect to legacy db

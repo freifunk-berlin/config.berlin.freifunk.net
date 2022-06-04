@@ -19,14 +19,14 @@ def send_mail_to_pools(pools, subject, template, delay):
     print("Template\n========\n")
     print(template)
 
-    print("\nSending this as an email to %d recipients of pool(s) %s: y/N" % \
-            (len(recipients), pools))
-    raw = raw_input().lower()
+    print(("\nSending this as an email to %d recipients of pool(s) %s: y/N" % \
+            (len(recipients), pools)))
+    raw = input().lower()
     if raw and strtobool(raw):
         size = len(recipients)
         for i,email in enumerate(recipients):
             send_email(email, subject, template, {}, no_template = True)
-            print("%f [%d/%d] %s" % (i/size, i, size, email))
+            print(("%f [%d/%d] %s" % (i/size, i, size, email)))
             sleep(float(delay))
     else:
         print("Aborted")
