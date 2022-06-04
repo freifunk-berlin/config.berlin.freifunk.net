@@ -2,8 +2,6 @@
 
 import string
 from random import choice
-from functools import wraps
-from itertools import chain
 from flask import redirect, url_for, render_template, g, current_app
 from flask_mail import Message
 from werkzeug.exceptions import BadRequest

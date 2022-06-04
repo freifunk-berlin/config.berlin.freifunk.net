@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from wtforms import SelectField
-from flask import Blueprint, render_template, redirect, url_for, current_app,\
-                  request
-from werkzeug.exceptions import BadRequest
-from .models import IPRequest
-from .forms import ExpertForm, DestroyForm, create_select_field
-from .utils import request_create, send_email, ip_request_get,\
-                   activate_and_redirect
+from flask import Blueprint, render_template, url_for, current_app
+from .forms import ExpertForm, create_select_field
+from .utils import request_create, send_email, activate_and_redirect
 from .exts import db
 
 

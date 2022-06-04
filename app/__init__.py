@@ -3,7 +3,6 @@
 from flask import Flask, render_template
 from .wizard import wizard
 from .exts import db, mail, migrate
-from .wizard import wizard
 from .expert import expert
 from .summary import summary
 from .main import main

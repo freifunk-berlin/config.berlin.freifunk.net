@@ -1,17 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import re
-
-from itertools import chain
-from flask import Blueprint, render_template, redirect, url_for, current_app,\
-                  request, g
-from werkzeug.exceptions import BadRequest
+from flask import Blueprint, render_template, redirect, url_for, current_app
 from wtforms import SelectField
 from .utils import request_create, send_email, get_api, router_db_get_entry,\
-                   router_db_has_entry, router_db_list, activate_and_redirect,\
-                   ip_request_get
-from .models import IPRequest
-from .forms import EmailForm, DestroyForm
+                   router_db_has_entry, router_db_list, activate_and_redirect
+from .forms import EmailForm
 from .exts import db
 
 

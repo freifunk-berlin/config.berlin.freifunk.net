@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import validates
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, SelectField, BooleanField
+from wtforms import StringField, HiddenField, SelectField
 from wtforms.validators import Email, AnyOf, Length, Required
 from .models import IPRequest
 

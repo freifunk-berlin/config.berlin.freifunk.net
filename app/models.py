@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from flask import current_app, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
+from flask import current_app
 from werkzeug.exceptions import BadRequest
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from sqlalchemy import event
 from .exts import db
-from .utils import gen_random_hash, router_db_get_entry, send_email
+from .utils import gen_random_hash, router_db_get_entry
 from .wizard import get_api
 
 class IPRequest(db.Model):
