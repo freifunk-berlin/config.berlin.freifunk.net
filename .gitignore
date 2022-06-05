@@ -58,3 +58,6 @@ migrations
 
 # Config
 config.cfg
+
+# IDE related files
+.idea
