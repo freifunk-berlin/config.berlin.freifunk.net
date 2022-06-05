@@ -7,6 +7,7 @@ from .forms import SummaryForm
 
 summary = Blueprint('summary', __name__)
 
+
 @summary.route('/summary', methods=['GET', 'POST'])
 def summary_index():
     form = SummaryForm()
@@ -32,8 +33,8 @@ def summary_index():
             contactlinks.append(url)
 
         subject = '[Freifunk Berlin] IP-Auflistung'
-        data = {'table' : table, 'dellinks' : dellinks, 'contactlinks' : contactlinks, 'email': email}
+        data = {'table': table, 'dellinks': dellinks, 'contactlinks': contactlinks, 'email': email}
         send_email(email, subject, 'summary/email.txt', data)
-        return render_template('summary/success.html', email = email)
+        return render_template('summary/success.html', email=email)
 
-    return render_template('summary/form.html', form = form)
+    return render_template('summary/form.html', form=form)

@@ -4,6 +4,7 @@ from .legacy_importer import legacy_import, legacy_get_mails
 from .cleanup import delete_unconfirmed_requests, delete_orphaned_prefixes
 from .mail import get_mail_addresses_for_pools, send_mail_to_pools
 
+
 @manager.command
 def resetdb():
     db.drop_all()
@@ -12,12 +13,14 @@ def resetdb():
 
 @manager.command
 @manager.option('-h', '--hours', help='hours after a request should be deleted')
-def remove_unconfirmed_requests(hours = 48):
+def remove_unconfirmed_requests(hours=48):
     delete_unconfirmed_requests(int(hours))
+
 
 @manager.command
 def remove_orphaned_prefixes():
     delete_orphaned_prefixes()
+
 
 @manager.command
 @manager.option('-u', '--user', help='database user')
@@ -50,7 +53,7 @@ def mail_addresses_for_pools(pools):
 @manager.option('-s', '--subject', help='subject')
 @manager.option('-t', '--template', help='template file')
 @manager.option('-d', '--delay', help='delay between emails')
-def mail(pools, subject, template_file, delay = 0.5):
+def mail(pools, subject, template_file, delay=0.5):
     with open(template_file, 'r') as f:
         template = f.read()
 

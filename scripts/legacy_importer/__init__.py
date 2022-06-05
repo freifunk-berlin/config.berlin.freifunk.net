@@ -7,6 +7,7 @@ from app.nipap import NipapApi
 from ipaddress import IPv4Network, collapse_addresses
 from pynipap import NipapDuplicateError
 
+
 def legacy_import(db_user, db_pass, db_host, db_name):
     # init and connect to legacy db
     db_uri = 'postgresql://%s:%s@%s/%s' % (db_user, db_pass, db_host, db_name)
@@ -26,13 +27,14 @@ def legacy_import(db_user, db_pass, db_host, db_name):
             try:
                 data = {
                     'description': user[1],
-                    'tags': ['legacy','imported']
+                    'tags': ['legacy', 'imported']
                 }
                 get_api().create_prefix_by_cidr(c, user[3], pool, data)
 
                 print(("\t* %s saved." % c))
             except NipapDuplicateError:
                 print(("\t* %s already exists." % c))
+
 
 def legacy_get_mails(db_user, db_pass, db_host, db_name):
     # init and connect to legacy db

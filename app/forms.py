@@ -7,10 +7,12 @@ from wtforms.validators import Email, AnyOf, Length, DataRequired
 from .models import IPRequest
 
 captcha_validator = AnyOf(('Berlin', 'berlin'),
-        message='Falsch. Wie heisst die Hauptstadt Deutschlands?')
+                          message='Falsch. Wie heisst die Hauptstadt Deutschlands?')
+
+
 class EmailForm(FlaskForm):
     email = StringField('E-Mail', validators=[Email()])
-    hostname = StringField('Name', validators=[Length(4,32)])
+    hostname = StringField('Name', validators=[Length(4, 32)])
     captcha = StringField('Captcha', validators=[captcha_validator])
 
     @validates('hostname')
@@ -46,7 +48,7 @@ class ContactMailForm(FlaskForm):
 
 class ExpertForm(FlaskForm):
     email = StringField('E-Mail', validators=[Email()])
-    name = StringField('Name', validators=[Length(4,32)])
+    name = StringField('Name', validators=[Length(4, 32)])
     captcha = StringField('Captcha', validators=[captcha_validator])
 
     @validates('name')
@@ -56,12 +58,13 @@ class ExpertForm(FlaskForm):
             raise ValueError('Name bereits vergeben.')
         return field
 
+
 class SummaryForm(FlaskForm):
     email = StringField('E-Mail', validators=[Email()])
 
     @validates('email')
     def validate_email(self, field):
-        r = IPRequest.query.filter_by(email = field.data)
+        r = IPRequest.query.filter_by(email=field.data)
         if r is None:
             raise ValueError('Ungültige Anfrage')
         return field
@@ -88,6 +91,6 @@ class RequiredAny(DataRequired):
 
 def create_select_field(cls, attr, name, placeholder, choices_raw, depends):
     validators = [RequiredAny(depends, 'Bitte mind. eine Auswahl für IPv4 oder IPv6 treffen')]
-    choices = [('', placeholder)] + [(str(k),k) for k in choices_raw]
+    choices = [('', placeholder)] + [(str(k), k) for k in choices_raw]
     setattr(cls, attr, SelectField(name, choices=choices,
-        validators=validators))
+                                   validators=validators))

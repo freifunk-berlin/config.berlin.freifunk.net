@@ -7,6 +7,7 @@ from .expert import expert
 from .summary import summary
 from .main import main
 
+
 def create_app(config=None):
     """Creates the Flask app."""
     app = Flask(__name__)

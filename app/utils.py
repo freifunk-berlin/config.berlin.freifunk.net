@@ -14,13 +14,13 @@ def get_api():
     if api is None:
         api = g._api = NipapApi(current_app.config['APP_ID'])
         uri = 'http://%s:%s@%s' % (current_app.config['API_USER'],
-                  current_app.config['API_PASS'], current_app.config['API_HOST'])
+                                   current_app.config['API_PASS'], current_app.config['API_HOST'])
         g._api.connect(uri)
 
     return api
 
 
-def request_create(name, email, prefixes_v4, prefixes_v6, router_id = None):
+def request_create(name, email, prefixes_v4, prefixes_v6, router_id=None):
     """Process the data gathered from the input form, by performing all steps
        needed to assign enough ips for the router model of the user. """
 
@@ -54,11 +54,10 @@ def gen_random_hash(length):
     return ''.join(choice(digits) for x in range(length))
 
 
-
-def send_email(recipient, subject, template, data, no_template = False):
+def send_email(recipient, subject, template, data, no_template=False):
     body = render_template(template, **data) if not no_template else template
     msg = Message(subject, sender=current_app.config['MAIL_FROM'],
-              recipients=[recipient], body = body)
+                  recipients=[recipient], body=body)
     return mail.send(msg)
 
 
@@ -71,7 +70,7 @@ def _get_firmwares_for_router(data):
         firmware_id = firmware_id[:-1]
 
     prefix_data = (data['target'], packages, '-'.join(firmware_id), data['fs'])
-    prefix =  "%s/%s/openwrt-%s-%s" % prefix_data
+    prefix = "%s/%s/openwrt-%s-%s" % prefix_data
 
     firmwares = current_app.config['FIRMWARES']
     for k in list(firmwares.keys()):
@@ -84,13 +83,13 @@ def router_db_get_entry(router_db, router_id):
         return None
 
     cursor = router_db
-    data = dict([(k,v) for k,v in list(cursor.items()) if k != 'entries'])
+    data = dict([(k, v) for k, v in list(cursor.items()) if k != 'entries'])
     keys = router_id.split('/')
     for n in keys:
         cursor = cursor['entries'][n]
 
         # merge data
-        for k,v in list(cursor.items()):
+        for k, v in list(cursor.items()):
             if k != 'entries':
                 data[k] = v
 
@@ -109,12 +108,13 @@ def router_db_has_entry(router_db, router_id):
 
 
 def router_db_list(router_db):
-    for target, subtargets  in sorted(router_db['entries'].items()):
+    for target, subtargets in sorted(router_db['entries'].items()):
         for subtarget, profiles in sorted(subtargets['entries'].items()):
             for profile, entries in sorted(profiles['entries'].items()):
                 for device, data in sorted(entries['entries'].items()):
                     name = "%s/%s/%s/%s" % (target, subtarget, profile, device)
                     yield (name, data)
+
 
 def ip_request_get(request_id):
     from .models import IPRequest
@@ -123,9 +123,10 @@ def ip_request_get(request_id):
         raise BadRequest("Ungültige ID. Hast du den Eintrag bereits gelöscht?")
     return r
 
+
 def ip_request_for_email(email):
     from .models import IPRequest
-    r = IPRequest.query.filter_by(email = email)
+    r = IPRequest.query.filter_by(email=email)
     if r.count() == 0:
         raise BadRequest("Kein Eintrag für diese E-Mail")
     return r
@@ -140,7 +141,7 @@ def activate_and_redirect(email_template, request_id, signed_token):
         url_contactmail = url_for("main.contact_mail", request_id=r.id,
                                   signed_token=r.token_contactmail, _external=True)
         subject = "[Freifunk Berlin] IPs - %s" % r.name
-        data = {'request' : r, 'url_destroy':url_destroy, 'url_contactmail':url_contactmail}
+        data = {'request': r, 'url_destroy': url_destroy, 'url_contactmail': url_contactmail}
         send_email(r.email, subject, email_template, data)
 
-    return redirect(url_for('main.config_show', request_id=r.id, signed_token = r.token_config))
+    return redirect(url_for('main.config_show', request_id=r.id, signed_token=r.token_config))
