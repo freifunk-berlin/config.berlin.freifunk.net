@@ -22,7 +22,7 @@ Install
 
     $ git clone https://github.com/freifunk-berlin/config.berlin.freifunk.net.git nipap-wizard
     $ cd nipap-wizard
-    $ virtualenv --python=python2 venv
+    $ virtualenv --python=python3 venv
     $ source venv/bin/activate
     $ pip install -r requirements.txt
     $ cp config.cfg.dist config.cfg

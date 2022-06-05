@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from flask import Blueprint, render_template, url_for
+from werkzeug.exceptions import BadRequest
+
 from .forms import DestroyForm, ContactMailForm
 from .utils import ip_request_get, send_email
 

@@ -16,6 +16,8 @@ def wizard_activate(request_id, signed_token):
     return activate_and_redirect(template, request_id, signed_token)
 
 
+
+
 @wizard.route('/wizard/routers')
 @wizard.route('/wizard/routers/<path:router_id>')
 def wizard_select_router(router_id = None):
@@ -25,7 +27,6 @@ def wizard_select_router(router_id = None):
 
     routers = router_db_list(router_db)
     return render_template('wizard/select_router.html', routers=routers)
-
 
 @wizard.route('/wizard/forms/<path:router_id>', methods=['GET', 'POST'])
 def wizard_form(router_id):

@@ -3,13 +3,13 @@
 from sqlalchemy.orm import validates
 from flask_wtf import FlaskForm
 from wtforms import StringField, HiddenField, SelectField
-from wtforms.validators import Email, AnyOf, Length, Required
+from wtforms.validators import Email, AnyOf, Length, DataRequired
 from .models import IPRequest
 
 captcha_validator = AnyOf(('Berlin', 'berlin'),
         message='Falsch. Wie heisst die Hauptstadt Deutschlands?')
 class EmailForm(FlaskForm):
-    email = StringField('Email', validators=[Email()])
+    email = StringField('E-Mail', validators=[Email()])
     hostname = StringField('Name', validators=[Length(4,32)])
     captcha = StringField('Captcha', validators=[captcha_validator])
 
@@ -22,7 +22,7 @@ class EmailForm(FlaskForm):
 
 
 class DestroyForm(FlaskForm):
-    email = StringField('Email', validators=[Email()])
+    email = StringField('E-Mail', validators=[Email()])
     request_id = HiddenField('request_id')
     token = HiddenField('token')
 
@@ -33,7 +33,7 @@ class DestroyForm(FlaskForm):
             raise ValueError('Ungültige Anfrage')
 
         if field.data != r.email:
-            raise ValueError('Email stimmt nicht überein.')
+            raise ValueError('E-Mail stimmt nicht überein.')
         return field
 
 
@@ -45,7 +45,7 @@ class ContactMailForm(FlaskForm):
 
 
 class ExpertForm(FlaskForm):
-    email = StringField('Email', validators=[Email()])
+    email = StringField('E-Mail', validators=[Email()])
     name = StringField('Name', validators=[Length(4,32)])
     captcha = StringField('Captcha', validators=[captcha_validator])
 
@@ -57,7 +57,7 @@ class ExpertForm(FlaskForm):
         return field
 
 class SummaryForm(FlaskForm):
-    email = StringField('Email', validators=[Email()])
+    email = StringField('E-Mail', validators=[Email()])
 
     @validates('email')
     def validate_email(self, field):
@@ -67,9 +67,9 @@ class SummaryForm(FlaskForm):
         return field
 
 
-class RequiredAny(Required):
+class RequiredAny(DataRequired):
     """
-    RequiredAny is a WTForm validaotr which makes a field required if
+    RequiredAny is a WTForm validator which makes a field required if
     another field is _not_ set.
     """
 
@@ -81,6 +81,7 @@ class RequiredAny(Required):
         other_field = form._fields.get(self.other_field_name)
         if other_field is None:
             raise Exception('no field named "%s" in form' % self.other_field_name)
+
         if not bool(other_field.data):
             super(RequiredAny, self).__call__(form, field)
 
