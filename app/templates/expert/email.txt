@@ -9,7 +9,7 @@ Mesh-IPs:
 Wenn du die IP-Adressen nicht mehr benötigst, kannst du sie mit dem folgenden Link
 löschen:
 
-{{url}}
+{{url_destroy}}
 
 Grüße
 Freifunk Berlin
