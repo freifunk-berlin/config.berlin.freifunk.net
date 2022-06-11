@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from wtforms import SelectField
-from flask import Blueprint, render_template, redirect, url_for, current_app,\
-                  request
-from werkzeug.exceptions import BadRequest
-from .models import IPRequest
-from forms import ExpertForm, DestroyForm, create_select_field
-from .utils import request_create, send_email, ip_request_get,\
-                   activate_and_redirect
+from flask import Blueprint, render_template, url_for, current_app
+from .forms import ExpertForm, create_select_field
+from .utils import request_create, send_email, activate_and_redirect
 from .exts import db
 
-
 expert = Blueprint('expert', __name__)
+
 
 @expert.route('/expert/activate/<int:request_id>/<signed_token>')
 def expert_activate(request_id, signed_token):
@@ -22,11 +17,11 @@ def expert_activate(request_id, signed_token):
 @expert.route('/expert/form', methods=['GET', 'POST'])
 def expert_form():
     # add select fields dynamically (because they get their data from config)
-    ipv4_prefixes = range(32, current_app.config['EXPERT_MAX_PREFIX']-1, -1)
-    create_select_field(ExpertForm, 'ipv4_prefix', u'IPv4-Präfix', 'kein IPv4',
-            ipv4_prefixes, 'ipv6_pool')
-    create_select_field(ExpertForm, 'ipv6_pool', u'Wahlkreis', 'kein IPv6',
-            current_app.config['API_POOL_IPV6'], 'ipv4_prefix')
+    ipv4_prefixes = list(range(32, current_app.config['EXPERT_MAX_PREFIX'] - 1, -1))
+    create_select_field(ExpertForm, 'ipv4_prefix', 'IPv4-Präfix', 'kein IPv4',
+                        ipv4_prefixes, 'ipv6_pool')
+    create_select_field(ExpertForm, 'ipv6_pool', 'Wahlkreis', 'kein IPv6',
+                        current_app.config['API_POOL_IPV6'], 'ipv4_prefix')
 
     form = ExpertForm()
     if form.validate_on_submit():
@@ -37,13 +32,13 @@ def expert_form():
             if form.ipv6_pool.data else []
 
         r = request_create(form.name.data, form.email.data, prefixes_v4,
-                prefixes_v6)
+                           prefixes_v6)
 
         try:
             url = url_for(".expert_activate", request_id=r.id,
                           signed_token=r.token_activation, _external=True)
             subject = "[Freifunk Berlin] Aktivierung - %s" % r.name
-            send_email(r.email, subject, "activation.txt", {'url':url})
+            send_email(r.email, subject, "activation.txt", {'url': url})
 
         except:
             # if send_mail fails we delete the already saved request

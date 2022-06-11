@@ -2,6 +2,7 @@
 
 import pynipap
 
+
 class NipapApi:
     """This class wraps pynipap into an useable API for creating prefixes.
        Before you can use API functions you have to connect to a valid 
@@ -34,6 +35,7 @@ class NipapApi:
        * create prefix with a specific prefix length from a pool named Mesh
            api.create_prefix_from_pool('Mesh', 26)
     """
+
     def __init__(self, app_id):
         self.app_id = app_id
         pynipap.AuthOptions({'authoritative_source': app_id})
@@ -41,12 +43,12 @@ class NipapApi:
     def connect(self, uri, vrf='default'):
         """Connects to nipap instance. Vrf parameter is optional."""
         pynipap.xmlrpc_uri = uri
-        
+
         self.vrf = self.get_vrf_by_name(vrf)
         if self.vrf is None:
             raise Exception("VRF '%s' could not be found" % vrf)
 
-    def _get_by(self, cls, val1, val2, search_options = None):
+    def _get_by(self, cls, val1, val2, search_options=None):
         query = {
             'operator': 'equals',
             'val1': str(val1),
@@ -76,12 +78,12 @@ class NipapApi:
 
     def get_prefixes_by_pool_name(self, pool_name):
         # 2^31-1 is max value XML-RPC supports
-        opts = { 'include_all_children': True, 'max_result': (2**31)-1 }
+        opts = {'include_all_children': True, 'max_result': (2 ** 31) - 1}
         return self._get_by(pynipap.Prefix, 'pool_name', pool_name, opts)
 
-    def find_free_prefix(self, pool_name, prefix_len = None):
+    def find_free_prefix(self, pool_name, prefix_len=None):
         """Searches for a valid free prefix in a given pool."""
-        args = {'from-pool': { 'name':  pool_name}, 'family': 4 }
+        args = {'from-pool': {'name': pool_name}, 'family': 4}
         if prefix_len is not None:
             args['prefix_length'] = prefix_len
 
@@ -93,11 +95,11 @@ class NipapApi:
     def list_all_prefixes(self):
         return pynipap.Prefix.list()
 
-    def _create_prefix(self, pool, prefix_type, family = 4, prefix_len = None, data = {}):
+    def _create_prefix(self, pool, prefix_type, family=4, prefix_len=None, data={}):
         prefix = pynipap.Prefix()
         prefix.vrf = self.vrf
         prefix.type = prefix_type
-        for k,v in data.items():
+        for k, v in list(data.items()):
             setattr(prefix, k, v)
 
         args = {'from-pool': pool, 'family': family}
@@ -108,7 +110,7 @@ class NipapApi:
 
         return prefix
 
-    def create_prefix_from_pool(self, pool_name, prefix_type = 'assignment', prefix_len = None, family = 4, data = {}):
+    def create_prefix_from_pool(self, pool_name, prefix_type='assignment', prefix_len=None, family=4, data={}):
         """Creates a prefix from a given pool. You can specify prefix_len if
            you do not want to us default prefix_len of that pool. Additional
            data can be added with data (as a dict). Only the following
@@ -124,15 +126,15 @@ class NipapApi:
 
         return prefix.prefix
 
-    def allocate_ips(self, pool, request_id, email, hostname, prefix_len = None, family = 4, prefix_type='reservation'):
+    def allocate_ips(self, pool, request_id, email, hostname, prefix_len=None, family=4, prefix_type='reservation'):
         data = {
             'tags': [self.app_id],
-            'description' : hostname,
-            'customer_id' : email,
-            'external_key' : request_id
+            'description': hostname,
+            'customer_id': email,
+            'external_key': request_id
         }
         return self.create_prefix_from_pool(pool, prefix_type, prefix_len,
-                family, data=data)
+                                            family, data=data)
 
     def activate_ips(self, request_id):
         for p in self.get_prefixes_by_external_key(request_id):
@@ -147,12 +149,12 @@ class NipapApi:
         for p in self.get_prefixes_by_external_key(external_key):
             p.remove()
 
-    def create_prefix_by_cidr(self, cidr, email, pool = None, data = {}):
+    def create_prefix_by_cidr(self, cidr, email, pool=None, data={}):
         p = pynipap.Prefix()
         p.type = 'assignment'
         p.prefix = cidr
         p.customer_id = email
-        for k,v in data.items():
+        for k, v in list(data.items()):
             setattr(p, k, v)
 
         if pool is not None:

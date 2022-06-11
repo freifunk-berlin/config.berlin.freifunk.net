@@ -16,12 +16,13 @@
 {% macro render_bootstrap_checkbox(field, description) -%}
 <div class="form-group">
     <div class="col-md-offset-2 col-md-10">
-    <div class="checkbox">
-        <label>
-            {{ field(type='checkbox', **kwargs) }} {{ field.label }}
-        </label>
-    </div>
+        <div class="checkbox">
+            <label>
+                {{ field(type='checkbox', **kwargs) }} {{ field.label }}
+            </label>
+        </div>
     <span class="help-block italic">{{ description|safe }}</span>
+    </div>
 </div>
 {%- endmacro %}
 

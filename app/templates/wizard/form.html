@@ -12,7 +12,7 @@ Standortdaten
           <form class="form-horizontal col-md-8" role="form" action="{{url_for('.wizard_form', router_id = "/".join(router.id)) }}" method="post">
 
             {{ form.csrf_token }}
-            {{ render_bootstrap_field(form.hostname, "Spitzname des Routers", "Ein kurzer und eindeutiger Name für deinen Router (z.B. <em>funkenpumpe</em> oder <em>HermannStr42_VH</em>). Dieser Name wird nur intern für dich hinterlegt.") }}
+            {{ render_bootstrap_field(form.hostname, "Spitzname des Routers", "Ein kurzer und eindeutiger Name für deinen Router (z.B. <em>funkenpumpe</em> oder <em>HermannStr42_VH</em>). Dieser Name wird nur intern für dich hinterlegt und muss zwischen 4 und 32 Zeichen lang sein.") }}
             {{ render_bootstrap_field(form.email, "Kontaktadresse", "Notwendig, damit wir dir die Router-Konfiguration per E-Mail zuschicken können. Benutze am besten immer die gleiche Adresse, auch falls du mehrere Router hast; dann kannst du die IPs hier gesammelt verwalten.") }}
             {{ render_bootstrap_field(form.location_type, help="Je nach Standort benutzen mehr oder weniger viele Menschen zur selben Zeit den Freifunk-Router. Cafés und Kneipen haben mehr gleichzeitige Benutzer_innen und brauchen so mehr IP-Adressen als ein Router zu Hause.") }}
             {{ render_bootstrap_field(form.captcha, "Hauptstadt Deutschlands?", "Wird benötigt, um Spam-Bots auszuschließen.") }}

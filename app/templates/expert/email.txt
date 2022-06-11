@@ -6,10 +6,10 @@ Mesh-IPs:
 {% for ip in request.ips %} * {{ip}}
 {% endfor %}
 
-Wenn du die IP-Adressen nicht mehr brauchst kannst du sie folgendem Link
+Wenn du die IP-Adressen nicht mehr benötigst, kannst du sie mit dem folgenden Link
 löschen:
 
-{{url}}
+{{url_destroy}}
 
 Grüße
 Freifunk Berlin

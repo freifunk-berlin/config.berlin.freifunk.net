@@ -19,7 +19,7 @@ Backbone-IP-Vergabe
             {{ form.csrf_token }}
 
             <h3 class="col-md-12 text-center">Allgemein</h3>
-            {{ render_bootstrap_field(form.name, "ID", "Eindeutige ID für deine Anfrage zum Beispiel Standortname") }}
+            {{ render_bootstrap_field(form.name, "ID", "Eindeutige ID für deine Anfrage zum Beispiel Standortname. Dieser muss zwischen 4 und 32 Zeichen lang sein.") }}
             {{ render_bootstrap_field(form.email, "Kontaktadresse", "Notwendig, damit wir dir eine Aktivierungsmail schicken können.")}}
             {{ render_bootstrap_field(form.captcha, "Hauptstadt Deutschlands?", "Wird benötigt um Spam-Bots auszuschließen.") }}
 
