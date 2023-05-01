@@ -1,4 +1,4 @@
-Flask==2.1.2
+Flask==2.3.2
 Flask-Mail==0.9.1
 Flask-Migrate==2.7.0
 Flask-SQLAlchemy==2.5.1
