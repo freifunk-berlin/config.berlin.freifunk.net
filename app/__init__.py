@@ -6,6 +6,7 @@ from .exts import db, mail, migrate
 from .expert import expert
 from .summary import summary
 from .main import main
+from .simplemode import simplemode
 
 
 def create_app(config=None):
@@ -16,7 +17,7 @@ def create_app(config=None):
     configure_extensions(app)
     configure_error_handlers(app)
 
-    for blueprint in [main, wizard, expert, summary]:
+    for blueprint in [main, wizard, expert, summary, simplemode]:
         app.register_blueprint(blueprint)
 
     return app
