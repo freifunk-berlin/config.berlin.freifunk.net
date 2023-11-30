@@ -20,8 +20,7 @@ def config_show(request_id, signed_token):
     if r.viewable(signed_token) or not r.verified:
         raise BadRequest("Eintrag wurde bisher noch nicht aktiviert!")
 
-    return render_template('config.html', name=r.name, ips=r.ips_pretty,
-                           router=r.router)
+    return render_template('config.html', name=r.name, ips=r.ips_pretty)
 
 
 @main.route('/destroy/<int:request_id>/<signed_token>', methods=['GET', 'POST'])

@@ -6,8 +6,7 @@ from werkzeug.exceptions import BadRequest
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from sqlalchemy import event
 from .exts import db
-from .utils import gen_random_hash, router_db_get_entry
-from .wizard import get_api
+from .utils import gen_random_hash, get_api
 
 
 class IPRequest(db.Model):
@@ -19,10 +18,9 @@ class IPRequest(db.Model):
     token = db.Column(db.String(128), unique=True)
     created_at = db.Column(db.DateTime(), default=datetime.now)
 
-    def __init__(self, name, email, router_id):
+    def __init__(self, name, email):
         self.name = name
         self.email = email
-        self.router_id = router_id
         self.token = gen_random_hash(32)
 
     def activate(self, signed_token):
@@ -98,10 +96,6 @@ class IPRequest(db.Model):
                 ips['hna'].append(ip)
         return ips
 
-    @property
-    def router(self):
-        router_db = current_app.config['ROUTER_DB']
-        return router_db_get_entry(router_db, self.router_id)
 
     def __repr__(self):
         return '<IPRequest %r>' % self.email

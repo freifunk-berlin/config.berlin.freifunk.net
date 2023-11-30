@@ -16,17 +16,6 @@ Konfiguration
           <dl class="dl-horizontal col-md-8">
             <dt>Hostname</dt>
             <dd>{{name}}</dd>
-
-            {% if router %}
-              <dt>Router</dt>
-              <dd>{{router.name}}</dd>
-
-              <dt>Firmware</dt>
-              <dd>
-                siehe Tabelle im Wiki-Artikel <a href="https://wiki.freifunk.net/Berlin:Firmware">Berlin:Firmware</a>
-              </dd>
-            {% endif %}
-
             {% if ips['mesh'] %}
               <dt>Mesh-IPs</dt>
               <dd>
@@ -47,23 +36,4 @@ Konfiguration
           </dl>
         </div>
       </div>
-
-      {% if router %}
-      <div class="row">
-        <h2 class="col-md-12">Nächste Schritte</h2>
-      </div>
-
-      <div class="row">
-        <p class="col-md-12">
-          Mit Hilfe der Konfigurationsparameter kannst du nun deinen Router
-          <em>flashen</em>. Das heißt, das Freifunk-Betriebssystem installieren
-          und konfigurieren. Hierzu folgst du am besten diesen Informationen:
-        </p>
-        <ul class="col-md-l col-md-offset-1">
-          <li><a href="https://wiki.freifunk.net/Berlin:Firmware">Berlin:Firmware</a> - Wiki-Artikel mit Firmware-Images und häufigen Fragen</li>
-          <li><a href="https://wiki.freifunk.net/Berlin:Firmware:Howto">Freifunk-Router aufsetzen</a></li>
-        </ul>
-      </div>
-    </div>
-    {% endif %}
 {% endblock %}
