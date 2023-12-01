@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, render_template
-from .wizard import wizard
 from .exts import db, mail, migrate
 from .expert import expert
 from .summary import summary
@@ -17,7 +16,7 @@ def create_app(config=None):
     configure_extensions(app)
     configure_error_handlers(app)
 
-    for blueprint in [main, wizard, expert, summary, simplemode]:
+    for blueprint in [main, expert, summary, simplemode]:
         app.register_blueprint(blueprint)
 
     return app

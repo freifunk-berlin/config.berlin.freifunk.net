@@ -1,6 +1,6 @@
 from sqlalchemy.orm import validates
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, SelectField
+from wtforms import StringField, HiddenField, SelectField, EmailField
 from wtforms.validators import Email, AnyOf, Length, DataRequired, ValidationError
 from .models import IPRequest
 
@@ -10,7 +10,7 @@ captcha_validator = AnyOf(
 
 
 class EmailForm(FlaskForm):
-    email = StringField("E-Mail", validators=[Email()])
+    email = EmailField("E-Mail", validators=[Email()])
     hostname = StringField("Name", validators=[Length(4, 32)])
     captcha = StringField("Captcha", validators=[captcha_validator])
 
@@ -23,7 +23,7 @@ class EmailForm(FlaskForm):
 
 
 class DestroyForm(FlaskForm):
-    email = StringField("E-Mail", validators=[Email()])
+    email = EmailField("E-Mail", validators=[Email()])
     request_id = HiddenField("request_id")
     token = HiddenField("token")
 
@@ -46,7 +46,7 @@ class ContactMailForm(FlaskForm):
 
 
 class ExpertForm(FlaskForm):
-    email = StringField("E-Mail", validators=[Email()])
+    email = EmailField("E-Mail", validators=[Email()])
     name = StringField("Name", validators=[Length(4, 32)])
     captcha = StringField("Captcha", validators=[captcha_validator])
 
@@ -59,7 +59,7 @@ class ExpertForm(FlaskForm):
 
 
 class SummaryForm(FlaskForm):
-    email = StringField("E-Mail", validators=[Email()])
+    email = EmailField("E-Mail", validators=[Email()])
 
     @validates("email")
     def validate_email(self, field):
