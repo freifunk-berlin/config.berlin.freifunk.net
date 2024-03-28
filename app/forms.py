@@ -1,4 +1,5 @@
 from sqlalchemy.orm import validates
+from sqlalchemy import func
 from flask_wtf import FlaskForm
 from wtforms import StringField, HiddenField, SelectField, EmailField
 from wtforms.validators import Email, AnyOf, Length, DataRequired, ValidationError
@@ -33,7 +34,7 @@ class DestroyForm(FlaskForm):
         if r is None:
             raise ValidationError("Ungültige Anfrage")
 
-        if field.data != r.email:
+        if field.data.lower() != r.email.lower():
             raise ValidationError("E-Mail stimmt nicht überein.")
         return field
 
@@ -63,7 +64,7 @@ class SummaryForm(FlaskForm):
 
     @validates("email")
     def validate_email(self, field):
-        r = IPRequest.query.filter_by(email=field.data)
+        r = IPRequest.query.filter(func.lower(IPRequest.email) == func.lower(field.data))
         if r is None:
             raise ValidationError("Ungültige Anfrage")
         return field

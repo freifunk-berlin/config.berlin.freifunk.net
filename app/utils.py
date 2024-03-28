@@ -7,6 +7,7 @@ from flask_mail import Message
 from werkzeug.exceptions import BadRequest
 from .nipap import NipapApi
 from .exts import mail
+from sqlalchemy import func
 
 
 def get_api():
@@ -80,8 +81,7 @@ def ip_request_get(request_id):
 
 def ip_request_for_email(email):
     from .models import IPRequest
-
-    r = IPRequest.query.filter_by(email=email, verified=True)
+    r = IPRequest.query.filter(func.lower(IPRequest.email) == func.lower(email), IPRequest.verified == True)
     if r.count() == 0:
         raise BadRequest("Kein Eintrag für diese E-Mail")
     return r
