@@ -3,6 +3,7 @@ from wtforms import SelectField
 from .utils import request_create, send_email, activate_and_redirect
 from .forms import EmailForm
 from .exts import db
+from wtforms.validators import DataRequired
 
 simplemode = Blueprint('simplemode', __name__)
 
@@ -17,7 +18,10 @@ def simplemode_activate(request_id, signed_token):
 def simplemode_form():
 
     # add location field dynamically (values are set in config)
-    setattr(EmailForm, 'ipv6_pool', SelectField('Wahlkreis', choices=current_app.config['API_POOL_IPV6']))
+    v6pool = current_app.config['API_POOL_IPV6_SIMPLE']
+    v6_choices = [("", "Bitte Stadteil wählen")] + [(k, k) for k in list(v6pool.keys())]
+
+    setattr(EmailForm, 'ipv6_pool', SelectField('Stadtteil', choices=v6_choices, validators=[DataRequired()]))
     form = EmailForm()
 
     if form.validate_on_submit():
@@ -27,7 +31,8 @@ def simplemode_form():
         # hna network
         pool_hna = current_app.config['API_POOL_HNA']
         prefixes_hna = [(pool_hna, '27')]
-        prefixes_v6 = [(form.ipv6_pool.data, None)] if form.ipv6_pool.data else []
+
+        prefixes_v6 = [(v6pool[form.ipv6_pool.data], None)]
 
         r = request_create(form.hostname.data, form.email.data,
                            prefixes_mesh + prefixes_hna, prefixes_v6)

@@ -14,7 +14,7 @@ Standortdaten
             {{ form.csrf_token }}
             {{ render_bootstrap_field(form.hostname, "Spitzname des Routers", "Ein kurzer und eindeutiger Name für deinen Router (z.B. <em>funkenpumpe</em> oder <em>HermannStr42_VH</em>). Dieser Name wird nur intern für dich hinterlegt und muss zwischen 4 und 32 Zeichen lang sein.") }}
             {{ render_bootstrap_field(form.email, "Kontaktadresse", "Notwendig, damit wir dir die Router-Konfiguration per E-Mail zuschicken können. Benutze am besten immer die gleiche Adresse, auch falls du mehrere Router hast; dann kannst du die IPs hier gesammelt verwalten.") }}
-            {{ render_bootstrap_field(form.ipv6_pool, help="Dies wird ben&oumltigt um verbindungen im Netzwerk zu optimieren") }}
+            {{ render_bootstrap_field(form.ipv6_pool, help="Dies wird ben&oumltigt um Verbindungen im Netzwerk zu optimieren", placeholder="Bitte Stadtteil ausw&auml;hlen, html" ) }}
             {{ render_bootstrap_field(form.captcha, "Hauptstadt Deutschlands?", "Wird benötigt, um Spam-Bots auszuschließen.") }}
 
             <div class="form-group">

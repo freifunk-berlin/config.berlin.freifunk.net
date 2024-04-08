@@ -13,7 +13,7 @@ class IPRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120))
     name = db.Column(db.String(120), unique=True)
-    router_id = db.Column(db.String(120))
+    # router_id = db.Column(db.String(120))
     verified = db.Column(db.Boolean(), default=False)
     token = db.Column(db.String(128), unique=True)
     created_at = db.Column(db.DateTime(), default=datetime.now)

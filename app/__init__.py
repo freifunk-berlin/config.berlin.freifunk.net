@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from flask import Flask, render_template
 from .exts import db, mail, migrate
 from .expert import expert
