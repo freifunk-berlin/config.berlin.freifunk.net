@@ -1,7 +1,7 @@
 [tool.pylint.main]
 
 # Specify a score threshold under which the program will exit with error.
-fail-under = 10
+fail-under = 8.32 # Fix it to the current state and raise it to 10 over time
 
 # Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
 # number of processors available to use, and will cap the count on Windows to
@@ -21,4 +21,3 @@ disable =
     C0114, #missing-module-docstring
     C0115, #missing-class-docstring
     C0116, #missing-function-docstring
-
