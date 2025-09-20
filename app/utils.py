@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import string
 from random import choice
 from flask import redirect, url_for, render_template, g, current_app

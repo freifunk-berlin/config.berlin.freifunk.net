@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from flask import Blueprint, render_template, url_for, current_app
 from .forms import ExpertForm, create_select_field
 from .utils import request_create, send_email, activate_and_redirect

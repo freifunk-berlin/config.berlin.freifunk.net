@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from flask import Blueprint, render_template, url_for
 from werkzeug.exceptions import BadRequest
 

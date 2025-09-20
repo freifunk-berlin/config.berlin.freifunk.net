@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from datetime import datetime
 from flask import current_app
 from werkzeug.exceptions import BadRequest
