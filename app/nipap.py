@@ -1,17 +1,15 @@
-# -*- coding: utf-8 -*-
-
 import pynipap
 
 
 class NipapApi:
     """This class wraps pynipap into an useable API for creating prefixes.
-       Before you can use API functions you have to connect to a valid 
+       Before you can use API functions you have to connect to a valid
        nipap instance like the following:
 
            api_user = 'foo'
            api_pass = 'bar'
            api_host = 'localhost:1337'
-           
+
            api = Api('nipap-wizard')
            api.connect('http://%s:%s@%s' % (api_user, api_pass, api_host))
 
@@ -46,7 +44,7 @@ class NipapApi:
 
         self.vrf = self.get_vrf_by_name(vrf)
         if self.vrf is None:
-            raise Exception("VRF '%s' could not be found" % vrf)
+            raise Exception(f"VRF '{vrf}' could not be found")
 
     def _get_by(self, cls, val1, val2, search_options=None):
         query = {
@@ -74,7 +72,7 @@ class NipapApi:
 
     def get_prefixes_by_external_key(self, external_key):
         """Searches for prefixes by external_key."""
-        return self._get_by(pynipap.Prefix, 'external_key', '%d' % external_key)
+        return self._get_by(pynipap.Prefix, 'external_key', f'{external_key}')
 
     def get_prefixes_by_pool_name(self, pool_name):
         # 2^31-1 is max value XML-RPC supports
@@ -120,7 +118,7 @@ class NipapApi:
         """
         pool = self.get_pool_by_name(pool_name)
         if pool is None:
-            raise Exception("Pool '%s' does not exist" % pool_name)
+            raise Exception(f"Pool '{pool_name}' does not exist")
 
         prefix = self._create_prefix(pool, prefix_type, family, prefix_len, data=data)
 

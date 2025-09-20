@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from datetime import datetime
 from flask import current_app
 from werkzeug.exceptions import BadRequest
@@ -98,7 +96,7 @@ class IPRequest(db.Model):
 
 
     def __repr__(self):
-        return '<IPRequest %r>' % self.email
+        return f'<IPRequest {self.email}>'
 
 
 @event.listens_for(IPRequest, 'after_delete')

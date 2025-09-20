@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import string
 from random import choice
 from flask import redirect, url_for, render_template, g, current_app
@@ -103,7 +101,7 @@ def activate_and_redirect(email_template, request_id, signed_token):
             signed_token=r.token_contactmail,
             _external=True,
         )
-        subject = "[Freifunk Berlin] IPs - %s" % r.name
+        subject = f"[Freifunk Berlin] IPs - {r.name}"
         data = {
             "request": r,
             "url_destroy": url_destroy,
