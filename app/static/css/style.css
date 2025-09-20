@@ -62,7 +62,7 @@ a, a:hover {
 .button  {
   margin: 20px;
   display: inline-block;
-  border-radius: 15px;
+  border-radius: 5px;
   border: 1px solid #ccc;
   background-color: #fff;
   padding: 6px 20px;
