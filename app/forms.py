@@ -83,7 +83,7 @@ class RequiredAny(DataRequired):
     def __call__(self, form, field):
         other_field = form._fields.get(self.other_field_name)
         if other_field is None:
-            raise Exception('no field named "%s" in form' % self.other_field_name)
+            raise Exception(f'no field named "{self.other_field_name}" in form')
 
         if not bool(other_field.data):
             super().__call__(form, field)

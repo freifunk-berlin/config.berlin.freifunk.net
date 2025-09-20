@@ -96,7 +96,7 @@ class IPRequest(db.Model):
 
 
     def __repr__(self):
-        return '<IPRequest %r>' % self.email
+        return f'<IPRequest {self.email}>'
 
 
 @event.listens_for(IPRequest, 'after_delete')

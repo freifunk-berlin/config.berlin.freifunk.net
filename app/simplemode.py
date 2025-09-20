@@ -40,7 +40,7 @@ def simplemode_form():
         try:
             url = url_for(".simplemode_activate", request_id=r.id,
                           signed_token=r.token_activation, _external=True)
-            subject = "[Freifunk Berlin] Aktivierung - %s" % r.name
+            subject = f"[Freifunk Berlin] Aktivierung - {r.name}"
             data = {'name': r.name, 'url': url}
             send_email(r.email, subject, "activation.txt", data)
         except Exception as e:

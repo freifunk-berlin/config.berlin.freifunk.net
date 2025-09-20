@@ -36,7 +36,7 @@ def expert_form():
         try:
             url = url_for(".expert_activate", request_id=r.id,
                           signed_token=r.token_activation, _external=True)
-            subject = "[Freifunk Berlin] Aktivierung - %s" % r.name
+            subject = f"[Freifunk Berlin] Aktivierung - {r.name}"
             send_email(r.email, subject, "activation.txt", {'url': url})
 
         except:

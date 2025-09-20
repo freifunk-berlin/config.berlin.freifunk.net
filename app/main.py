@@ -40,7 +40,7 @@ def contact_mail(request_id, signed_token):
     if form.validate_on_submit():
         try:
             r.sendcontactmail(form.token.data)
-            subject = "[Freifunk Berlin] Kontakt per Web - %s" % r.name
+            subject = f"[Freifunk Berlin] Kontakt per Web - {r.name}"
             data = {'request': r, 'text': form.text.data}
             send_email(r.email, subject, "contact_mail.txt", data)
             return render_template('contact_mail_result.html', result="Mail erfolgreich gesendet.")
